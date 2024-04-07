@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Grid,
@@ -6,7 +6,9 @@ import {
   ImageListItemBar,
   Link,
   Stack,
+  TablePagination,
   TextField,
+  Typography,
 } from "@mui/material";
 
 interface PropsItem {
@@ -54,12 +56,42 @@ const Item = (props: PropsItem) => {
 };
 
 export default function App() {
+  const maxCount = 100;
+  const [array, setArray] = useState<number[]>([]);
+  const [showArray, setShowArray] = useState<number[]>([]);
   const [_searchPic, setSearchPic] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const array = [1, 2, 3, 4, 5];
+  useEffect(() => {
+    if (array.length === 0) {
+      for (let i = 1; i <= maxCount; i++) {
+        array.push(i);
+      }
+      setArray([...array]);
+    }
+    const newArray = array.slice(
+      page * rowsPerPage,
+      page * rowsPerPage + rowsPerPage,
+    );
+    setShowArray(newArray);
+  }, [array, page, rowsPerPage]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchPic(event.target.value);
+  };
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement> | null,
+    newPage: number,
+  ) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   return (
@@ -73,11 +105,20 @@ export default function App() {
           onChange={handleSearchChange}
         />
         <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
+          <Typography>Page: {page + 1}</Typography>
+          <TablePagination
+            component="div"
+            count={maxCount}
+            page={page}
+            onPageChange={handleChangePage}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
           <Grid
             container
             spacing={{ xs: 1, md: 2 }}
           >
-            {Array.from(array).map((item, idx) => (
+            {Array.from(showArray).map((item, idx) => (
               <Grid
                 item
                 xs={6}
