@@ -5,3 +5,5 @@ import App from "./App";
 const root = document.createElement("div");
 document.body.append(root);
 ReactDOM.createRoot(root).render(React.createElement(App));
+
+document.title = "Movie Search";
