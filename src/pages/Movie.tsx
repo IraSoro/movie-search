@@ -5,8 +5,9 @@ import {
   Grid,
   Card,
   CardContent,
-  CardMedia,
   Box,
+  MobileStepper,
+  Button,
 } from "@mui/material";
 
 interface Movie {
@@ -14,13 +15,66 @@ interface Movie {
   description: string;
   actors: string[];
   seasons: string[];
-  poster: string;
+  poster: string[];
   rating: string;
 }
 
-interface DetailsProps {
-  movie: Movie;
+interface SwiperPostersProps {
+  images: string[];
 }
+
+const SwiperPosters: React.FC<SwiperPostersProps> = ({ images }) => {
+  const [activeStep, setActiveStep] = React.useState(0);
+  const maxSteps = images.length;
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <Box
+        component="img"
+        sx={{
+          height: "auto",
+          maxWidth: "100%",
+          display: "block",
+          overflow: "hidden",
+        }}
+        src={images[activeStep]}
+        alt={`image ${activeStep + 1}`}
+      />
+      <MobileStepper
+        steps={maxSteps}
+        position="static"
+        activeStep={activeStep}
+        elevation={0}
+        nextButton={
+          <Button
+            size="small"
+            onClick={handleNext}
+            disabled={activeStep === maxSteps - 1}
+          >
+            Next
+          </Button>
+        }
+        backButton={
+          <Button
+            size="small"
+            onClick={handleBack}
+            disabled={activeStep === 0}
+          >
+            Back
+          </Button>
+        }
+      />
+    </Box>
+  );
+};
 
 interface ListProps {
   list: string[];
@@ -71,6 +125,10 @@ const ListPagination: React.FC<ListProps> = ({ list }) => {
     );
 };
 
+interface DetailsProps {
+  movie: Movie;
+}
+
 const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
   return (
     <Grid
@@ -83,12 +141,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
         md={6}
       >
         <Card>
-          <CardMedia
-            component="img"
-            height="auto"
-            image={movie.poster}
-            alt={movie.title}
-          />
+          <SwiperPosters images={movie.poster} />
         </Card>
       </Grid>
       <Grid
@@ -157,7 +210,7 @@ const testMovieInfo = {
     "Season 5",
     "Season 6",
   ],
-  poster: "/assets/default.jpg",
+  poster: ["/assets/default.jpg", "/assets/default.jpg", "/assets/default.jpg"],
   rating: "8.0",
 };
 
