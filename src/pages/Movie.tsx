@@ -8,7 +8,22 @@ import {
   Box,
   MobileStepper,
   Button,
+  Stack,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
 } from "@mui/material";
+
+import PersonIcon from "@mui/icons-material/Person";
+
+import { testMovieInfo } from "../../assets/testMovieInfo";
+
+interface Review {
+  author: string;
+  comment: string;
+}
 
 interface Movie {
   title: string;
@@ -17,7 +32,47 @@ interface Movie {
   seasons: string[];
   poster: string[];
   rating: string;
+  reviews: Review[];
 }
+
+interface ReviewsProps {
+  reviews: Review[];
+}
+
+const ReviewsBox: React.FC<ReviewsProps> = ({ reviews }) => {
+  return (
+    <div>
+      <Typography
+        variant="h6"
+        gutterBottom
+      >
+        Reviews:
+      </Typography>
+      <List>
+        {reviews.map((review, index) => (
+          <ListItem
+            key={index}
+            sx={{
+              backgroundColor: "#f5f5f5",
+              borderRadius: 2,
+              marginBottom: 1,
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <PersonIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={<strong>{review.author}</strong>}
+              secondary={review.comment}
+            />
+          </ListItem>
+        ))}
+      </List>
+    </div>
+  );
+};
 
 interface SwiperPostersProps {
   images: string[];
@@ -190,37 +245,17 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
   );
 };
 
-const testMovieInfo = {
-  title: "The Shawshank Redemption",
-  description:
-    "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-  actors: [
-    "Tim Robbins",
-    "Morgan Freeman",
-    "Bob Gunton",
-    "Tim Robbins",
-    "Morgan Freeman",
-    "Bob Gunton",
-  ],
-  seasons: [
-    "Season 1",
-    "Season 2",
-    "Season 3",
-    "Season 4",
-    "Season 5",
-    "Season 6",
-  ],
-  poster: ["/assets/default.jpg", "/assets/default.jpg", "/assets/default.jpg"],
-  rating: "8.0",
-};
-
 export default function Movie() {
   const { _id } = useParams<string>();
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
-        <MovieDetails movie={testMovieInfo} />
+        <Stack>
+          <MovieDetails movie={testMovieInfo} />
+          <Box sx={{ height: "40px" }} />
+          <ReviewsBox reviews={testMovieInfo.reviews} />
+        </Stack>
       </Box>
     </div>
   );
