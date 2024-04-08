@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
 import {
   Box,
+  FormControl,
   Grid,
+  IconButton,
   ImageListItem,
   ImageListItemBar,
+  InputAdornment,
+  InputLabel,
   Link,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Stack,
   TablePagination,
   TextField,
-  Typography,
 } from "@mui/material";
+
+import SearchIcon from "@mui/icons-material/Search";
 
 interface PropsItem {
   item: string;
@@ -55,6 +63,123 @@ const Item = (props: PropsItem) => {
   );
 };
 
+const AgeRatingFilter = () => {
+  const ageRatingList = ["0+", "6+", "12+", "16+", "18+"];
+  const [ageRating, setAgeRating] = useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAgeRating(event.target.value);
+  };
+
+  return (
+    <FormControl
+      variant="standard"
+      sx={{ m: 1, width: 110 }}
+    >
+      <InputLabel>Age Rating</InputLabel>
+      <Select
+        autoWidth
+        value={ageRating}
+        label="Year"
+        onChange={handleChange}
+      >
+        <MenuItem value="">
+          <em>-</em>
+        </MenuItem>
+        {ageRatingList.map((item) => (
+          <MenuItem
+            key={item}
+            value={item}
+          >
+            {item}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
+const CountryFilter = () => {
+  const countriesList = ["Russia", "USA", "Georgia", "China", "India"];
+  const [country, setCountry] = useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setCountry(event.target.value);
+  };
+
+  return (
+    <FormControl
+      variant="standard"
+      sx={{ m: 1, width: 90 }}
+    >
+      <InputLabel>Country</InputLabel>
+      <Select
+        autoWidth
+        value={country}
+        label="Year"
+        onChange={handleChange}
+      >
+        <MenuItem value="">
+          <em>-</em>
+        </MenuItem>
+        {countriesList.map((item) => (
+          <MenuItem
+            key={item}
+            value={item}
+          >
+            {item}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
+const YearFilter = () => {
+  const [year, setYear] = useState("");
+  const [yearsList, setYearsList] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (yearsList.length === 0) {
+      for (let i = 1970; i <= 2024; i++) {
+        yearsList.push(i);
+      }
+      setYearsList([...yearsList]);
+    }
+  }, [yearsList]);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setYear(event.target.value);
+  };
+
+  return (
+    <FormControl
+      variant="standard"
+      sx={{ m: 1, width: 90 }}
+    >
+      <InputLabel>Year</InputLabel>
+      <Select
+        autoWidth
+        value={year}
+        label="Year"
+        onChange={handleChange}
+      >
+        <MenuItem value="">
+          <em>-</em>
+        </MenuItem>
+        {yearsList.map((item) => (
+          <MenuItem
+            key={item}
+            value={item}
+          >
+            {item}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
+};
+
 export default function App() {
   const maxCount = 100;
   const [array, setArray] = useState<number[]>([]);
@@ -97,15 +222,50 @@ export default function App() {
   return (
     <div style={centerStyle}>
       <Stack>
+        <Grid
+          container
+          alignItems="start"
+          sx={{ maxWidth: "280px" }}
+        >
+          <Grid
+            item
+            xs={12}
+            md={4}
+          >
+            <YearFilter />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+          >
+            <CountryFilter />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+          >
+            <AgeRatingFilter />
+          </Grid>
+        </Grid>
         <TextField
-          sx={{ marginBottom: "15px" }}
+          sx={{ marginBottom: "15px", marginTop: "15px" }}
           id="outlined-basic"
-          label="Search for movies and TV series"
+          label="Search for movies and series"
           variant="outlined"
           onChange={handleSearchChange}
-        />
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => {}}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        ></TextField>
         <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
-          <Typography>Page: {page + 1}</Typography>
           <TablePagination
             component="div"
             count={maxCount}
