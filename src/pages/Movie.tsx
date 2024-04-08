@@ -14,6 +14,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  Pagination,
 } from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
@@ -39,7 +40,23 @@ interface ReviewsProps {
   reviews: Review[];
 }
 
-const ReviewsBox: React.FC<ReviewsProps> = ({ reviews }) => {
+const ReviewList: React.FC<ReviewsProps> = ({ reviews }) => {
+  const [page, setPage] = useState(1);
+  const reviewsPerPage = 5;
+
+  const pageCount = Math.ceil(reviews.length / reviewsPerPage);
+
+  const handleChangePage = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPage(value);
+  };
+
+  const startIndex = (page - 1) * reviewsPerPage;
+  const endIndex = page * reviewsPerPage;
+  const currentReviews = reviews.slice(startIndex, endIndex);
+
   return (
     <div>
       <Typography
@@ -49,7 +66,7 @@ const ReviewsBox: React.FC<ReviewsProps> = ({ reviews }) => {
         Reviews:
       </Typography>
       <List>
-        {reviews.map((review, index) => (
+        {currentReviews.map((review, index) => (
           <ListItem
             key={index}
             sx={{
@@ -69,6 +86,20 @@ const ReviewsBox: React.FC<ReviewsProps> = ({ reviews }) => {
             />
           </ListItem>
         ))}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={handleChangePage}
+            size="large"
+          />
+        </div>
       </List>
     </div>
   );
@@ -254,7 +285,7 @@ export default function Movie() {
         <Stack>
           <MovieDetails movie={testMovieInfo} />
           <Box sx={{ height: "40px" }} />
-          <ReviewsBox reviews={testMovieInfo.reviews} />
+          <ReviewList reviews={testMovieInfo.reviews} />
         </Stack>
       </Box>
     </div>
