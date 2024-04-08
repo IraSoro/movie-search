@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Box,
   FormControl,
@@ -8,7 +9,6 @@ import {
   ImageListItemBar,
   InputAdornment,
   InputLabel,
-  Link,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -33,7 +33,7 @@ const Item = (props: PropsItem) => {
   return (
     <>
       <ImageListItem key={props.idx}>
-        <Link href={``}>
+        <Link to={`movies/${props.item}`}>
           <Box
             sx={{
               height: 350,
