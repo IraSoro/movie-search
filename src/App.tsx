@@ -1,12 +1,12 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route, HashRouter } from "react-router-dom";
 
 import Home from "./pages/Home";
 import Movie from "./pages/Movie";
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route
           path="/"
@@ -17,6 +17,6 @@ export default function App() {
           element={<Movie />}
         />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
