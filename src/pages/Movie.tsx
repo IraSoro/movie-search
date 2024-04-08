@@ -63,7 +63,7 @@ const ReviewList: React.FC<ReviewsProps> = ({ reviews }) => {
         variant="h6"
         gutterBottom
       >
-        Reviews:
+        Reviews
       </Typography>
       <List>
         {currentReviews.map((review, index) => (
@@ -167,7 +167,7 @@ interface ListProps {
 }
 
 const ListPagination: React.FC<ListProps> = ({ list }) => {
-  const maxCount = 3;
+  const maxCount = 5;
   const [showAll, setShowAll] = useState(false);
 
   const handleShowAll = () => {
@@ -217,62 +217,58 @@ interface DetailsProps {
 
 const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
   return (
-    <Grid
-      container
-      spacing={2}
-    >
-      <Grid
-        item
-        xs={12}
-        md={6}
+    <>
+      <Typography
+        variant="h4"
+        component="h2"
+        sx={{ marginTop: "20px", marginBottom: "10px" }}
       >
-        <Card>
-          <SwiperPosters images={movie.poster} />
-        </Card>
-      </Grid>
+        {movie.title}
+      </Typography>
       <Grid
-        item
-        xs={12}
-        md={6}
+        container
+        spacing={2}
       >
-        <CardContent>
-          <Typography
-            variant="h5"
-            component="h2"
-          >
-            {movie.title}
-          </Typography>
-          <Typography
-            variant="body1"
-            color="textSecondary"
-            component="p"
-          >
-            {movie.description}
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h3"
-          >
-            Movie rating{" "}
-            <span style={{ color: "#474d4e" }}>{movie.rating}</span>
-          </Typography>
-          <Typography
-            variant="h6"
-            component="h3"
-          >
-            Actors:
-          </Typography>
-          <ListPagination list={movie.actors} />
-          <Typography
-            variant="h6"
-            component="h3"
-          >
-            Seasons:
-          </Typography>
-          <ListPagination list={movie.seasons} />
-        </CardContent>
+        <Grid
+          item
+          xs={12}
+          md={6}
+        >
+          <Card>
+            <SwiperPosters images={movie.poster} />
+          </Card>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          md={6}
+        >
+          <CardContent>
+            <Typography
+              variant="h6"
+              component="h3"
+            >
+              Movie rating{" "}
+              <span style={{ color: "#474d4e" }}>{movie.rating}</span>
+            </Typography>
+            <Typography
+              variant="h6"
+              component="h3"
+            >
+              Actors:
+            </Typography>
+            <ListPagination list={movie.actors} />
+            <Typography
+              variant="h6"
+              component="h3"
+            >
+              Seasons:
+            </Typography>
+            <ListPagination list={movie.seasons} />
+          </CardContent>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 
@@ -284,6 +280,20 @@ export default function Movie() {
       <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
         <Stack>
           <MovieDetails movie={testMovieInfo} />
+          <Box sx={{ height: "40px" }} />
+          <Typography
+            variant="h6"
+            gutterBottom
+          >
+            About movies
+          </Typography>
+          <Typography
+            variant="body1"
+            color="textSecondary"
+            component="p"
+          >
+            {testMovieInfo.description}
+          </Typography>
           <Box sx={{ height: "40px" }} />
           <ReviewList reviews={testMovieInfo.reviews} />
         </Stack>
