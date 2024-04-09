@@ -17,6 +17,8 @@ import {
   Pagination,
 } from "@mui/material";
 
+import { Link } from "react-router-dom";
+
 import PersonIcon from "@mui/icons-material/Person";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -101,11 +103,13 @@ const Recommendations: React.FC<RecommendationsProps> = ({ movies }) => {
                     xs={4}
                     key={index}
                   >
-                    <img
-                      src={item.poster[0]}
-                      alt={`Image ${index}`}
-                      style={{ width: "100%" }}
-                    />
+                    <Link to={`/movies/${item.id}`}>
+                      <img
+                        src={item.poster[0]}
+                        alt={`Image ${index}`}
+                        style={{ width: "100%" }}
+                      />
+                    </Link>
                     <Typography sx={{ fontSize: "small" }}>
                       {item.title}
                     </Typography>
@@ -369,12 +373,14 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
 };
 
 export default function Movie() {
-  const { _id } = useParams<string>();
+  const { id } = useParams<string>();
+  console.log("id = ", id);
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
         <Stack>
+          <Link to="/">Back to Movie Search</Link>
           <MovieDetails movie={testMovieInfo} />
           <Box sx={{ height: "40px" }} />
           <Typography
