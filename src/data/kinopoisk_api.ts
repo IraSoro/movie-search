@@ -3,6 +3,9 @@ const token = process.env.TOKEN as string;
 interface MovieControllerFindManyByQueryOptions {
   page: number;
   limit: number;
+  year: string;
+  country: string;
+  ageRating: string;
 }
 
 export interface MovieControllerFindManyByQueryDoc {
@@ -22,8 +25,14 @@ interface MovieControllerFindManyByQueryResponse {
 async function movieControllerFindManyByQueryV14(
   options: MovieControllerFindManyByQueryOptions,
 ) {
+  const additionallyOptions =
+    (options.year ? `&year=${options.year}` : "") +
+    (options.country
+      ? `&countries.name=${encodeURIComponent(options.country)}`
+      : "") +
+    (options.ageRating ? `&ageRating=${options.ageRating}` : "");
   const resp = await fetch(
-    `https://api.kinopoisk.dev/v1.4/movie?page=${options.page}&limit=${options.limit}&selectFields=id&selectFields=name&selectFields=poster&notNullFields=id&notNullFields=name&notNullFields=poster.url`,
+    `https://api.kinopoisk.dev/v1.4/movie?page=${options.page}&limit=${options.limit}&selectFields=id&selectFields=name&selectFields=poster&notNullFields=id&notNullFields=name&notNullFields=poster.url${additionallyOptions}`,
     {
       method: "GET",
       headers: {

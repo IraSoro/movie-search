@@ -61,9 +61,13 @@ const Item: React.FC<PropsItem> = ({ movie }) => {
   );
 };
 
-const AgeRatingFilter = () => {
-  const ageRatingList = ["0", "6", "12", "16", "18"];
-  const [ageRating, setAgeRating] = useState("");
+interface FilterProps {
+  filter: string;
+  setFilter: (_newValue: string) => void;
+}
+
+const AgeRatingFilter = (props: FilterProps) => {
+  const ageRatingList = [0, 6, 12, 16, 18];
 
   return (
     <FormControl
@@ -73,10 +77,10 @@ const AgeRatingFilter = () => {
       <InputLabel>Age Rating</InputLabel>
       <Select
         autoWidth
-        value={ageRating}
+        value={props.filter}
         label="Year"
         onChange={(event) => {
-          setAgeRating(event.target.value);
+          props.setFilter(event.target.value);
         }}
       >
         <MenuItem value="">
@@ -95,11 +99,10 @@ const AgeRatingFilter = () => {
   );
 };
 
-const CountryFilter = () => {
+const CountryFilter = (props: FilterProps) => {
   const [countriesList, setCountriesList] = useState<
     PossibleValuesByFieldNameResponse[]
   >([]);
-  const [country, setCountry] = useState("");
 
   useEffect(() => {
     if (countriesList.length !== 0) return;
@@ -121,10 +124,10 @@ const CountryFilter = () => {
       <InputLabel>Country</InputLabel>
       <Select
         autoWidth
-        value={country}
+        value={props.filter}
         label="Year"
         onChange={(event) => {
-          setCountry(event.target.value);
+          props.setFilter(event.target.value);
         }}
       >
         <MenuItem value="">
@@ -143,8 +146,7 @@ const CountryFilter = () => {
   );
 };
 
-const YearFilter = () => {
-  const [year, setYear] = useState("");
+const YearFilter = (props: FilterProps) => {
   const [yearsList, setYearsList] = useState<number[]>([]);
 
   useEffect(() => {
@@ -164,10 +166,10 @@ const YearFilter = () => {
       <InputLabel>Year</InputLabel>
       <Select
         autoWidth
-        value={year}
+        value={props.filter}
         label="Year"
         onChange={(event) => {
-          setYear(event.target.value);
+          props.setFilter(event.target.value);
         }}
       >
         <MenuItem value="">
@@ -189,15 +191,23 @@ const YearFilter = () => {
 export default function Home() {
   const [total, setTotal] = useState(0);
   const [array, setArray] = useState<MovieControllerFindManyByQueryDoc[]>([]);
+
   const [_search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
+
+  const [year, setYear] = useState("");
+  const [country, setCountry] = useState("");
+  const [ageRating, setAgeRating] = useState("");
 
   useEffect(() => {
     kinopoiskApiV14
       .movieControllerFindManyByQuery({
         page: page + 1,
         limit: limit,
+        year: year,
+        country: country,
+        ageRating: ageRating,
       })
       .then((resp) => {
         setArray(resp.docs);
@@ -206,7 +216,7 @@ export default function Home() {
       .catch((err) => {
         console.error(err);
       });
-  }, [page, limit]);
+  }, [page, limit, year, country, ageRating]);
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -221,21 +231,30 @@ export default function Home() {
             xs={12}
             md={4}
           >
-            <YearFilter />
+            <YearFilter
+              filter={year}
+              setFilter={setYear}
+            />
           </Grid>
           <Grid
             item
             xs={12}
             md={4}
           >
-            <CountryFilter />
+            <CountryFilter
+              filter={country}
+              setFilter={setCountry}
+            />
           </Grid>
           <Grid
             item
             xs={12}
             md={4}
           >
-            <AgeRatingFilter />
+            <AgeRatingFilter
+              filter={ageRating}
+              setFilter={setAgeRating}
+            />
           </Grid>
         </Grid>
         <TextField
