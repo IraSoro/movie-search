@@ -36,6 +36,7 @@ const Item: React.FC<PropsItem> = ({ movie }) => {
           <Box
             sx={{
               height: 350,
+              width: "auto",
               maxWidth: 250,
               "@media (max-width: 600px)": {
                 height: 250,
@@ -149,7 +150,15 @@ export default function Home() {
             ),
           }}
         ></TextField>
-        <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            width: 700,
+            "@media (max-width: 600px)": {
+              width: "auto",
+            },
+          }}
+        >
           <TablePagination
             component="div"
             count={total}
