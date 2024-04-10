@@ -18,22 +18,24 @@ import {
 } from "@mui/material";
 
 import SearchIcon from "@mui/icons-material/Search";
+import {
+  kinopoiskApiV14,
+  MovieControllerFindManyByQueryDoc,
+} from "../data/kinopoisk_api";
 
 interface PropsItem {
-  item: string;
-  idx: number;
+  movie: MovieControllerFindManyByQueryDoc;
 }
 
 const centerStyle = {
   display: "flex",
   justifyContent: "center",
 };
-
-const Item = (props: PropsItem) => {
+const Item: React.FC<PropsItem> = ({ movie }) => {
   return (
     <>
-      <ImageListItem key={props.idx}>
-        <Link to={`movies/${props.item}`}>
+      <ImageListItem key={movie.id}>
+        <Link to={`movies/${movie.id}`}>
           <Box
             sx={{
               height: 350,
@@ -49,13 +51,13 @@ const Item = (props: PropsItem) => {
                 width: "100%",
                 height: "100%",
               }}
-              src="/assets/default.jpg"
+              src={movie.poster.url}
               loading="lazy"
             />
           </Box>
         </Link>
         <ImageListItemBar
-          title={props.item}
+          title={movie.name}
           position="below"
         />
       </ImageListItem>
@@ -181,43 +183,26 @@ const YearFilter = () => {
 };
 
 export default function Home() {
-  const maxCount = 100;
-  const [array, setArray] = useState<number[]>([]);
-  const [showArray, setShowArray] = useState<number[]>([]);
-  const [_searchPic, setSearchPic] = useState("");
+  const [total, setTotal] = useState(0);
+  const [array, setArray] = useState<MovieControllerFindManyByQueryDoc[]>([]);
+  const [_search, setSearch] = useState("");
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [limit, setLimit] = useState(10);
 
   useEffect(() => {
-    if (array.length === 0) {
-      for (let i = 1; i <= maxCount; i++) {
-        array.push(i);
-      }
-      setArray([...array]);
-    }
-    const newArray = array.slice(
-      page * rowsPerPage,
-      page * rowsPerPage + rowsPerPage,
-    );
-    setShowArray(newArray);
-  }, [array, page, rowsPerPage]);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchPic(event.target.value);
-  };
-  const handleChangePage = (
-    event: React.MouseEvent<HTMLButtonElement> | null,
-    newPage: number,
-  ) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    kinopoiskApiV14
+      .movieControllerFindManyByQuery({
+        page: page + 1,
+        limit: limit,
+      })
+      .then((resp) => {
+        setArray(resp.docs);
+        setTotal(resp.total);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [page, limit]);
 
   return (
     <div style={centerStyle}>
@@ -254,7 +239,9 @@ export default function Home() {
           id="outlined-basic"
           label="Search for movies and series"
           variant="outlined"
-          onChange={handleSearchChange}
+          onChange={(event) => {
+            setSearch(event.target.value);
+          }}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -268,17 +255,22 @@ export default function Home() {
         <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
           <TablePagination
             component="div"
-            count={maxCount}
+            count={total}
             page={page}
-            onPageChange={handleChangePage}
-            rowsPerPage={rowsPerPage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
+            onPageChange={(event, newPage: number) => {
+              setPage(newPage);
+            }}
+            rowsPerPage={limit}
+            onRowsPerPageChange={(event) => {
+              setLimit(parseInt(event.target.value, 10));
+              setPage(0);
+            }}
           />
           <Grid
             container
             spacing={{ xs: 1, md: 2 }}
           >
-            {Array.from(showArray).map((item, idx) => (
+            {Array.from(array).map((movie, idx) => (
               <Grid
                 item
                 xs={6}
@@ -286,10 +278,7 @@ export default function Home() {
                 md={4}
                 key={idx}
               >
-                <Item
-                  item={item.toString()}
-                  idx={idx}
-                />
+                <Item movie={movie} />
               </Grid>
             ))}
           </Grid>
