@@ -41,6 +41,33 @@ async function movieControllerFindManyByQueryV14(
   return (await resp.json()) as MovieControllerFindManyByQueryResponse;
 }
 
+// ---------------------------
+
+export interface PossibleValuesByFieldNameResponse {
+  name: string;
+  slug: string;
+}
+
+async function getPossibleValuesByFieldName() {
+  const resp = await fetch(
+    "https://api.kinopoisk.dev/v1/movie/possible-values-by-field?field=countries.name",
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-API-KEY": token,
+      },
+    },
+  );
+
+  if (resp.status !== 200) {
+    // TODO: Make custom error type
+    throw new Error(`Server returned incorrect status '${resp.status}'`);
+  }
+  return (await resp.json()) as PossibleValuesByFieldNameResponse[];
+}
+
 export const kinopoiskApiV14 = {
   movieControllerFindManyByQuery: movieControllerFindManyByQueryV14,
+  getPossibleValuesByFieldName: getPossibleValuesByFieldName,
 };

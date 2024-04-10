@@ -11,7 +11,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Stack,
   TablePagination,
   TextField,
@@ -21,16 +20,13 @@ import SearchIcon from "@mui/icons-material/Search";
 import {
   kinopoiskApiV14,
   MovieControllerFindManyByQueryDoc,
+  PossibleValuesByFieldNameResponse,
 } from "../data/kinopoisk_api";
 
 interface PropsItem {
   movie: MovieControllerFindManyByQueryDoc;
 }
 
-const centerStyle = {
-  display: "flex",
-  justifyContent: "center",
-};
 const Item: React.FC<PropsItem> = ({ movie }) => {
   return (
     <>
@@ -66,12 +62,8 @@ const Item: React.FC<PropsItem> = ({ movie }) => {
 };
 
 const AgeRatingFilter = () => {
-  const ageRatingList = ["0+", "6+", "12+", "16+", "18+"];
+  const ageRatingList = ["0", "6", "12", "16", "18"];
   const [ageRating, setAgeRating] = useState("");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setAgeRating(event.target.value);
-  };
 
   return (
     <FormControl
@@ -83,7 +75,9 @@ const AgeRatingFilter = () => {
         autoWidth
         value={ageRating}
         label="Year"
-        onChange={handleChange}
+        onChange={(event) => {
+          setAgeRating(event.target.value);
+        }}
       >
         <MenuItem value="">
           <em>-</em>
@@ -102,12 +96,22 @@ const AgeRatingFilter = () => {
 };
 
 const CountryFilter = () => {
-  const countriesList = ["Russia", "USA", "Georgia", "China", "India"];
+  const [countriesList, setCountriesList] = useState<
+    PossibleValuesByFieldNameResponse[]
+  >([]);
   const [country, setCountry] = useState("");
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setCountry(event.target.value);
-  };
+  useEffect(() => {
+    if (countriesList.length !== 0) return;
+    kinopoiskApiV14
+      .getPossibleValuesByFieldName()
+      .then((resp) => {
+        setCountriesList(resp);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  });
 
   return (
     <FormControl
@@ -119,17 +123,19 @@ const CountryFilter = () => {
         autoWidth
         value={country}
         label="Year"
-        onChange={handleChange}
+        onChange={(event) => {
+          setCountry(event.target.value);
+        }}
       >
         <MenuItem value="">
           <em>-</em>
         </MenuItem>
-        {countriesList.map((item) => (
+        {countriesList.map((item, index) => (
           <MenuItem
-            key={item}
-            value={item}
+            key={index}
+            value={item.name}
           >
-            {item}
+            {item.name}
           </MenuItem>
         ))}
       </Select>
@@ -143,16 +149,12 @@ const YearFilter = () => {
 
   useEffect(() => {
     if (yearsList.length === 0) {
-      for (let i = 1970; i <= 2024; i++) {
+      for (let i = 2024; i >= 1970; i--) {
         yearsList.push(i);
       }
       setYearsList([...yearsList]);
     }
   }, [yearsList]);
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setYear(event.target.value);
-  };
 
   return (
     <FormControl
@@ -164,7 +166,9 @@ const YearFilter = () => {
         autoWidth
         value={year}
         label="Year"
-        onChange={handleChange}
+        onChange={(event) => {
+          setYear(event.target.value);
+        }}
       >
         <MenuItem value="">
           <em>-</em>
@@ -205,7 +209,7 @@ export default function Home() {
   }, [page, limit]);
 
   return (
-    <div style={centerStyle}>
+    <div style={{ display: "flex", justifyContent: "center" }}>
       <Stack>
         <Grid
           container
