@@ -57,8 +57,8 @@ export const SwiperPosters = () => {
       <Box
         component="img"
         sx={{
-          height: "auto",
-          maxWidth: "100%",
+          height: "250px",
+          maxWidth: "auto",
           display: "block",
           overflow: "hidden",
         }}
