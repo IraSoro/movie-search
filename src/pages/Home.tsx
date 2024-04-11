@@ -67,7 +67,7 @@ export default function Home() {
   const [total, setTotal] = useState(0);
   const [array, setArray] = useState<MovieControllerFindManyByQueryDoc[]>([]);
 
-  const [_search, setSearch] = useState("");
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(10);
 
@@ -92,6 +92,22 @@ export default function Home() {
         console.error(err);
       });
   }, [page, limit, year, country, ageRating]);
+
+  function searchMovie() {
+    kinopoiskApiV14
+      .searchMovies({
+        page: page + 1,
+        limit: 10,
+        searchName: search,
+      })
+      .then((resp) => {
+        setArray(resp.docs);
+        setTotal(resp.total);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -143,7 +159,11 @@ export default function Home() {
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => {}}>
+                <IconButton
+                  onClick={() => {
+                    searchMovie();
+                  }}
+                >
                   <SearchIcon />
                 </IconButton>
               </InputAdornment>

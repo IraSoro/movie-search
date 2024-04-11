@@ -76,7 +76,50 @@ async function getPossibleValuesByFieldName() {
   return (await resp.json()) as PossibleValuesByFieldNameResponse[];
 }
 
+// ------------------------
+
+interface SearchMovieOptions {
+  page: number;
+  limit: number;
+  searchName: string;
+}
+
+interface SearchMovieDoc {
+  id: number;
+  name: string;
+  poster: {
+    url: string;
+    previewUrl: string;
+  };
+}
+
+interface SearchMovieResponse {
+  docs: SearchMovieDoc[];
+  total: number;
+}
+
+async function searchMovieV14(options: SearchMovieOptions) {
+  const resp = await fetch(
+    `https://api.kinopoisk.dev/v1.4/movie/search?page=${options.page}&limit=${options.limit}&query=${options.searchName}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-API-KEY": token,
+      },
+    },
+  );
+
+  if (resp.status !== 200) {
+    // TODO: Make custom error type
+    throw new Error(`Server returned incorrect status '${resp.status}'`);
+  }
+
+  return (await resp.json()) as SearchMovieResponse;
+}
+
 export const kinopoiskApiV14 = {
   movieControllerFindManyByQuery: movieControllerFindManyByQueryV14,
   getPossibleValuesByFieldName: getPossibleValuesByFieldName,
+  searchMovies: searchMovieV14,
 };
