@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   Box,
-  MobileStepper,
   Button,
   Stack,
   List,
@@ -23,12 +22,10 @@ import PersonIcon from "@mui/icons-material/Person";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
+import { SwiperPosters } from "../components/Swipers";
+
 import { testMovieInfo } from "../../assets/testMovieInfo";
-import {
-  FindOneResponse,
-  kinopoiskApiV14,
-  OneImage,
-} from "../data/kinopoisk_api";
+import { FindOneResponse, kinopoiskApiV14 } from "../data/kinopoisk_api";
 
 interface Review {
   author: string;
@@ -210,73 +207,6 @@ const ReviewList: React.FC<ReviewsProps> = ({ reviews }) => {
   );
 };
 
-const SwiperPosters = () => {
-  const { id } = useParams<string>();
-  const [images, setImages] = useState<OneImage[]>([]);
-  const [activeStep, setActiveStep] = useState(0);
-
-  useEffect(() => {
-    kinopoiskApiV14
-      .imageControllerFindMany({
-        page: 1,
-        limit: 10,
-        id: Number(id),
-      })
-      .then((resp) => {
-        setImages(resp.docs);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [id]);
-
-  return (
-    <Box sx={{ flexGrow: 1 }}>
-      <MobileStepper
-        steps={images.length}
-        position="static"
-        activeStep={activeStep}
-        elevation={0}
-        nextButton={
-          <Button
-            size="small"
-            onClick={() => {
-              setActiveStep((prevActiveStep) => prevActiveStep + 1);
-            }}
-            disabled={activeStep === images.length - 1}
-          >
-            Next
-          </Button>
-        }
-        backButton={
-          <Button
-            size="small"
-            onClick={() => {
-              setActiveStep((prevActiveStep) => prevActiveStep - 1);
-            }}
-            disabled={activeStep === 0}
-          >
-            Back
-          </Button>
-        }
-      />
-      <Box
-        component="img"
-        sx={{
-          height: "auto",
-          maxWidth: "100%",
-          display: "block",
-          overflow: "hidden",
-        }}
-        src={
-          images.length !== 0 ? images[activeStep].url : "assets/default.jpg"
-        }
-        alt={`image ${activeStep + 1}`}
-      />
-    </Box>
-  );
-};
-
 interface ListProps {
   list: string[];
 }
@@ -350,7 +280,17 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
           md={6}
         >
           <Card>
-            <SwiperPosters />
+            <Box
+              component="img"
+              sx={{
+                height: "auto",
+                maxWidth: "100%",
+                display: "block",
+                overflow: "hidden",
+              }}
+              src={movie.poster.url}
+              alt={`${movie.name} poster`}
+            />
           </Card>
         </Grid>
         <Grid
@@ -434,6 +374,14 @@ export default function Movie() {
           >
             {movieInfo.description}
           </Typography>
+          <Box sx={{ height: "40px" }} />
+          <Typography
+            variant="h6"
+            gutterBottom
+          >
+            Posters
+          </Typography>
+          <SwiperPosters />
           <Box sx={{ height: "40px" }} />
           <ReviewList reviews={testMovieInfo.reviews} />
           <Box sx={{ height: "40px" }} />
