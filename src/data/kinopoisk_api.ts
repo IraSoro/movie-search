@@ -50,8 +50,6 @@ async function movieControllerFindManyByQueryV14(
   return (await resp.json()) as MovieControllerFindManyByQueryResponse;
 }
 
-// ---------------------------
-
 export interface PossibleValuesByFieldNameResponse {
   name: string;
   slug: string;
@@ -75,8 +73,6 @@ async function getPossibleValuesByFieldName() {
   }
   return (await resp.json()) as PossibleValuesByFieldNameResponse[];
 }
-
-// ------------------------
 
 interface SearchMovieOptions {
   page: number;
@@ -118,8 +114,92 @@ async function searchMovieV14(options: SearchMovieOptions) {
   return (await resp.json()) as SearchMovieResponse;
 }
 
+interface FindOneOptions {
+  id: number;
+}
+
+interface SimilarMovie {
+  id: number;
+  name: string;
+  poster: {
+    url: string;
+    previewUrl: string;
+  };
+}
+
+export interface FindOneResponse {
+  name: string;
+  type: string;
+  description: string;
+  poster: { url: string };
+  similarMovies: SimilarMovie[];
+  rating: {
+    kp: number;
+  };
+}
+
+async function findOneV14(options: FindOneOptions) {
+  const resp = await fetch(
+    `https://api.kinopoisk.dev/v1.4/movie/${options.id}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-API-KEY": token,
+      },
+    },
+  );
+
+  if (resp.status !== 200) {
+    // TODO: Make custom error type
+    throw new Error(`Server returned incorrect status '${resp.status}'`);
+  }
+
+  return (await resp.json()) as FindOneResponse;
+}
+
+interface ImageControllerFindManyOptions {
+  page: number;
+  limit: number;
+  id: number;
+}
+
+export interface OneImage {
+  id: string;
+  url: string;
+}
+
+interface ImageControllerFindManyResponse {
+  total: number;
+  docs: OneImage[];
+}
+
+async function imageControllerFindManyV14(
+  options: ImageControllerFindManyOptions,
+) {
+  const resp = await fetch(
+    `https://api.kinopoisk.dev/v1.4/image?page=${options.page}&limit=${options.limit}&selectFields=url&notNullFields=url&movieId=${options.id}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-API-KEY": token,
+      },
+    },
+  );
+
+  if (resp.status !== 200) {
+    // TODO: Make custom error type
+    throw new Error(`Server returned incorrect status '${resp.status}'`);
+  }
+
+  return (await resp.json()) as ImageControllerFindManyResponse;
+}
+
 export const kinopoiskApiV14 = {
   movieControllerFindManyByQuery: movieControllerFindManyByQueryV14,
   getPossibleValuesByFieldName: getPossibleValuesByFieldName,
   searchMovies: searchMovieV14,
+  findOne: findOneV14,
+  imageControllerFindMany: imageControllerFindManyV14,
 };

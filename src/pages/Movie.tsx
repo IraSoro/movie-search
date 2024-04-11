@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Typography,
@@ -24,6 +24,11 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import { testMovieInfo } from "../../assets/testMovieInfo";
+import {
+  FindOneResponse,
+  kinopoiskApiV14,
+  OneImage,
+} from "../data/kinopoisk_api";
 
 interface Review {
   author: string;
@@ -205,24 +210,56 @@ const ReviewList: React.FC<ReviewsProps> = ({ reviews }) => {
   );
 };
 
-interface SwiperPostersProps {
-  images: string[];
-}
+const SwiperPosters = () => {
+  const { id } = useParams<string>();
+  const [images, setImages] = useState<OneImage[]>([]);
+  const [activeStep, setActiveStep] = useState(0);
 
-const SwiperPosters: React.FC<SwiperPostersProps> = ({ images }) => {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const maxSteps = images.length;
-
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  useEffect(() => {
+    kinopoiskApiV14
+      .imageControllerFindMany({
+        page: 1,
+        limit: 10,
+        id: Number(id),
+      })
+      .then((resp) => {
+        setImages(resp.docs);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [id]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <MobileStepper
+        steps={images.length}
+        position="static"
+        activeStep={activeStep}
+        elevation={0}
+        nextButton={
+          <Button
+            size="small"
+            onClick={() => {
+              setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            }}
+            disabled={activeStep === images.length - 1}
+          >
+            Next
+          </Button>
+        }
+        backButton={
+          <Button
+            size="small"
+            onClick={() => {
+              setActiveStep((prevActiveStep) => prevActiveStep - 1);
+            }}
+            disabled={activeStep === 0}
+          >
+            Back
+          </Button>
+        }
+      />
       <Box
         component="img"
         sx={{
@@ -231,32 +268,10 @@ const SwiperPosters: React.FC<SwiperPostersProps> = ({ images }) => {
           display: "block",
           overflow: "hidden",
         }}
-        src={images[activeStep]}
+        src={
+          images.length !== 0 ? images[activeStep].url : "assets/default.jpg"
+        }
         alt={`image ${activeStep + 1}`}
-      />
-      <MobileStepper
-        steps={maxSteps}
-        position="static"
-        activeStep={activeStep}
-        elevation={0}
-        nextButton={
-          <Button
-            size="small"
-            onClick={handleNext}
-            disabled={activeStep === maxSteps - 1}
-          >
-            Next
-          </Button>
-        }
-        backButton={
-          <Button
-            size="small"
-            onClick={handleBack}
-            disabled={activeStep === 0}
-          >
-            Back
-          </Button>
-        }
       />
     </Box>
   );
@@ -312,7 +327,7 @@ const ListPagination: React.FC<ListProps> = ({ list }) => {
 };
 
 interface DetailsProps {
-  movie: Movie;
+  movie: FindOneResponse;
 }
 
 const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
@@ -323,7 +338,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
         component="h2"
         sx={{ marginTop: "20px", marginBottom: "10px" }}
       >
-        {movie.title}
+        {movie.name}
       </Typography>
       <Grid
         container
@@ -335,7 +350,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
           md={6}
         >
           <Card>
-            <SwiperPosters images={movie.poster} />
+            <SwiperPosters />
           </Card>
         </Grid>
         <Grid
@@ -349,7 +364,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
               component="h3"
             >
               Movie rating{" "}
-              <span style={{ color: "#474d4e" }}>{movie.rating}</span>
+              <span style={{ color: "#474d4e" }}>{movie.rating.kp}</span>
             </Typography>
             <Typography
               variant="h6"
@@ -357,14 +372,14 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
             >
               Actors:
             </Typography>
-            <ListPagination list={movie.actors} />
+            <ListPagination list={["actor"]} />
             <Typography
               variant="h6"
               component="h3"
             >
               Seasons:
             </Typography>
-            <ListPagination list={movie.seasons} />
+            <ListPagination list={[movie.type]} />
           </CardContent>
         </Grid>
       </Grid>
@@ -375,13 +390,36 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
 export default function Movie() {
   const { id } = useParams<string>();
   console.log("id = ", id);
+  const [movieInfo, setMovieInfo] = useState<FindOneResponse>({
+    name: "",
+    type: "",
+    description: "",
+    poster: { url: "" },
+    similarMovies: [],
+    rating: {
+      kp: 0,
+    },
+  });
+
+  useEffect(() => {
+    kinopoiskApiV14
+      .findOne({
+        id: Number(id),
+      })
+      .then((resp) => {
+        setMovieInfo(resp);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [id]);
 
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
         <Stack>
           <Link to="/">Back to Movie Search</Link>
-          <MovieDetails movie={testMovieInfo} />
+          <MovieDetails movie={movieInfo} />
           <Box sx={{ height: "40px" }} />
           <Typography
             variant="h6"
@@ -394,7 +432,7 @@ export default function Movie() {
             color="textSecondary"
             component="p"
           >
-            {testMovieInfo.description}
+            {movieInfo.description}
           </Typography>
           <Box sx={{ height: "40px" }} />
           <ReviewList reviews={testMovieInfo.reviews} />
