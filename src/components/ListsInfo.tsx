@@ -122,62 +122,59 @@ export const SeasonsList = () => {
   }, [id, limit]);
 
   if (seasons.length === 0) return <Typography>No information</Typography>;
-  else
-    return (
-      <>
-        <ul
+  return (
+    <>
+      <ul
+        style={{
+          listStyleType: "none",
+          padding: 0,
+        }}
+      >
+        {showAll
+          ? seasons.map((season, index) => (
+              <Typography key={index}>{`Season ${season.number}`}</Typography>
+            ))
+          : seasons
+              .slice(0, total)
+              .map((season, index) => (
+                <Typography key={index}>{`Season ${season.number}`}</Typography>
+              ))}
+      </ul>
+      {showAll && seasons.length < total && (
+        <Typography
           style={{
-            listStyleType: "none",
-            padding: 0,
+            cursor: "pointer",
+            textDecoration: "underline",
+            color: "#474d4e",
+            marginBottom: "15px",
+          }}
+          onClick={() => {
+            setShowAll(false);
+            setFold(true);
+            setLimit(total);
           }}
         >
-          {showAll
-            ? seasons.map((season, index) => (
-                <Typography key={index}>{`Season ${season.number}`}</Typography>
-              ))
-            : seasons
-                .slice(0, total)
-                .map((season, index) => (
-                  <Typography
-                    key={index}
-                  >{`Season ${season.number}`}</Typography>
-                ))}
-        </ul>
-        {showAll && seasons.length < total && (
-          <Typography
-            style={{
-              cursor: "pointer",
-              textDecoration: "underline",
-              color: "#474d4e",
-              marginBottom: "15px",
-            }}
-            onClick={() => {
-              setShowAll(false);
-              setFold(true);
-              setLimit(total);
-            }}
-          >
-            Show All
-          </Typography>
-        )}
-        {fold && (
-          <Typography
-            style={{
-              cursor: "pointer",
-              textDecoration: "underline",
-              color: "#474d4e",
-              marginBottom: "15px",
-            }}
-            onClick={() => {
-              setShowAll(false);
-              setLimit(10);
-            }}
-          >
-            Fold
-          </Typography>
-        )}
-      </>
-    );
+          Show All
+        </Typography>
+      )}
+      {fold && (
+        <Typography
+          style={{
+            cursor: "pointer",
+            textDecoration: "underline",
+            color: "#474d4e",
+            marginBottom: "15px",
+          }}
+          onClick={() => {
+            setShowAll(false);
+            setLimit(10);
+          }}
+        >
+          Fold
+        </Typography>
+      )}
+    </>
+  );
 };
 
 export const ActorsList = () => {
@@ -205,58 +202,57 @@ export const ActorsList = () => {
   }, [id, limit]);
 
   if (actors.length === 0) return <Typography>No information</Typography>;
-  else
-    return (
-      <>
-        <ul
+  return (
+    <>
+      <ul
+        style={{
+          listStyleType: "none",
+          padding: 0,
+        }}
+      >
+        {showAll
+          ? actors.map((actor, index) => (
+              <Typography key={index}>{actor.name}</Typography>
+            ))
+          : actors
+              .slice(0, total)
+              .map((item, index) => (
+                <Typography key={index}>{item.name}</Typography>
+              ))}
+      </ul>
+      {showAll && actors.length < total && (
+        <Typography
           style={{
-            listStyleType: "none",
-            padding: 0,
+            cursor: "pointer",
+            textDecoration: "underline",
+            color: "#474d4e",
+            marginBottom: "15px",
+          }}
+          onClick={() => {
+            setShowAll(false);
+            setFold(true);
+            setLimit(total);
           }}
         >
-          {showAll
-            ? actors.map((actor, index) => (
-                <Typography key={index}>{actor.name}</Typography>
-              ))
-            : actors
-                .slice(0, total)
-                .map((item, index) => (
-                  <Typography key={index}>{item.name}</Typography>
-                ))}
-        </ul>
-        {showAll && actors.length < total && (
-          <Typography
-            style={{
-              cursor: "pointer",
-              textDecoration: "underline",
-              color: "#474d4e",
-              marginBottom: "15px",
-            }}
-            onClick={() => {
-              setShowAll(false);
-              setFold(true);
-              setLimit(total);
-            }}
-          >
-            Show All
-          </Typography>
-        )}
-        {fold && (
-          <Typography
-            style={{
-              cursor: "pointer",
-              textDecoration: "underline",
-              color: "#474d4e",
-              marginBottom: "15px",
-            }}
-            onClick={() => {
-              setShowAll(false);
-              setLimit(10);
-            }}
-          >
-            Fold
-          </Typography>
-        )}
-      </>
-    );
+          Show All
+        </Typography>
+      )}
+      {fold && (
+        <Typography
+          style={{
+            cursor: "pointer",
+            textDecoration: "underline",
+            color: "#474d4e",
+            marginBottom: "15px",
+          }}
+          onClick={() => {
+            setShowAll(false);
+            setLimit(10);
+          }}
+        >
+          Fold
+        </Typography>
+      )}
+    </>
+  );
 };
