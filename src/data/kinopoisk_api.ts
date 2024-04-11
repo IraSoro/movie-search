@@ -237,6 +237,44 @@ async function personControllerFindManyV14(
   return (await resp.json()) as PersonControllerFindManyResponse;
 }
 
+interface SeasonControllerFindManyOptions {
+  page: number;
+  limit: number;
+  moviesId: number;
+}
+
+export interface SeasonControllerFindManyDocs {
+  number: number;
+  id: string;
+}
+
+interface SeasonControllerFindManyResponse {
+  docs: SeasonControllerFindManyDocs[];
+  total: number;
+}
+
+async function seasonControllerFindManyV14(
+  options: SeasonControllerFindManyOptions,
+) {
+  const resp = await fetch(
+    `https://api.kinopoisk.dev/v1.4/season?page=${options.page}&limit=${options.limit}&selectFields=number&movieId=${options.moviesId}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-API-KEY": token,
+      },
+    },
+  );
+
+  if (resp.status !== 200) {
+    // TODO: Make custom error type
+    throw new Error(`Server returned incorrect status '${resp.status}'`);
+  }
+
+  return (await resp.json()) as SeasonControllerFindManyResponse;
+}
+
 export const kinopoiskApiV14 = {
   movieControllerFindManyByQuery: movieControllerFindManyByQueryV14,
   movieControllerGetPossibleValuesByFieldName:
@@ -245,4 +283,5 @@ export const kinopoiskApiV14 = {
   movieControllerFindOne: movieControllerFindOneV14,
   imageControllerFindMany: imageControllerFindManyV14,
   personControllerFindMany: personControllerFindManyV14,
+  seasonControllerFindMany: seasonControllerFindManyV14,
 };

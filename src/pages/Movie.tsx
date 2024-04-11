@@ -23,7 +23,7 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import { SwiperPosters } from "../components/Swipers";
-import { ListActors } from "../components/ListsInfo";
+import { ListActors, ListSeasons } from "../components/ListsInfo";
 
 import { testMovieInfo } from "../../assets/testMovieInfo";
 import {
@@ -211,55 +211,6 @@ const ReviewList: React.FC<ReviewsProps> = ({ reviews }) => {
   );
 };
 
-interface ListProps {
-  list: string[];
-}
-
-const ListPagination: React.FC<ListProps> = ({ list }) => {
-  const maxCount = 5;
-  const [showAll, setShowAll] = useState(false);
-
-  const handleShowAll = () => {
-    setShowAll(true);
-  };
-
-  if (list.length === 0) return <Typography>No information</Typography>;
-  else
-    return (
-      <>
-        <ul
-          style={{
-            listStyleType: "none",
-            padding: 0,
-          }}
-        >
-          {showAll
-            ? list.map((actor, index) => (
-                <Typography key={index}>{actor}</Typography>
-              ))
-            : list
-                .slice(0, maxCount)
-                .map((item, index) => (
-                  <Typography key={index}>{item}</Typography>
-                ))}
-        </ul>
-        {!showAll && list.length > maxCount && (
-          <Typography
-            style={{
-              cursor: "pointer",
-              textDecoration: "underline",
-              color: "#474d4e",
-              marginBottom: "15px",
-            }}
-            onClick={handleShowAll}
-          >
-            Show All
-          </Typography>
-        )}
-      </>
-    );
-};
-
 interface DetailsProps {
   movie: MovieControllerFindOneResponse;
 }
@@ -323,7 +274,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
             >
               Seasons:
             </Typography>
-            <ListPagination list={[movie.type]} />
+            <ListSeasons />
           </CardContent>
         </Grid>
       </Grid>
