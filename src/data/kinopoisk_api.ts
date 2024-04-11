@@ -313,6 +313,47 @@ async function reviewControllerFindManyV14(
   return (await resp.json()) as ReviewControllerFindManyResponse;
 }
 
+interface MovieControllerFindManyByQuerySimilarMoviesOptions {
+  page: number;
+  limit: number;
+  id: number;
+}
+
+export interface MovieControllerFindManyByQuerySimilarMoviesDoc {
+  id: number;
+  name: string;
+  poster: {
+    url: string;
+    previewUrl: string;
+  };
+}
+
+interface MovieControllerFindManyByQuerySimilarMoviesResponse {
+  docs: [{ similarMovies: MovieControllerFindManyByQuerySimilarMoviesDoc[] }];
+}
+
+async function movieControllerFindManyByQuerySimilarMoviesV14(
+  options: MovieControllerFindManyByQuerySimilarMoviesOptions,
+) {
+  const resp = await fetch(
+    `https://api.kinopoisk.dev/v1.4/movie?page=${options.page}&limit=${options.limit}&selectFields=similarMovies&notNullFields=similarMovies.id&notNullFields=similarMovies.name&notNullFields=similarMovies.poster.url&id=${options.id}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-API-KEY": token,
+      },
+    },
+  );
+
+  if (resp.status !== 200) {
+    // TODO: Make custom error type
+    throw new Error(`Server returned incorrect status '${resp.status}'`);
+  }
+
+  return (await resp.json()) as MovieControllerFindManyByQuerySimilarMoviesResponse;
+}
+
 export const kinopoiskApiV14 = {
   movieControllerFindManyByQuery: movieControllerFindManyByQueryV14,
   movieControllerGetPossibleValuesByFieldName:
@@ -323,4 +364,6 @@ export const kinopoiskApiV14 = {
   personControllerFindMany: personControllerFindManyV14,
   seasonControllerFindMany: seasonControllerFindManyV14,
   reviewControllerFindMany: reviewControllerFindManyV14,
+  movieControllerFindSimilarMovies:
+    movieControllerFindManyByQuerySimilarMoviesV14,
 };

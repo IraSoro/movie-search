@@ -1,139 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Typography,
-  Grid,
-  Card,
-  CardContent,
-  Box,
-  Button,
-  Stack,
-} from "@mui/material";
-
+import { Typography, Grid, Card, CardContent, Box, Stack } from "@mui/material";
 import { Link } from "react-router-dom";
-
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import { SwiperPosters } from "../components/Swipers";
 import { ActorsList, SeasonsList, ReviewsList } from "../components/ListsInfo";
+import { Recommendations } from "../components/Recommendation";
 
-import { testMovieInfo } from "../../assets/testMovieInfo";
 import {
   MovieControllerFindOneResponse,
   kinopoiskApiV14,
 } from "../data/kinopoisk_api";
-
-interface Review {
-  author: string;
-  comment: string;
-}
-
-interface Movie {
-  id: number;
-  title: string;
-  description: string;
-  actors: string[];
-  seasons: string[];
-  poster: string[];
-  rating: string;
-  reviews: Review[];
-}
-
-interface RecommendationsProps {
-  movies: Movie[];
-}
-
-const Recommendations: React.FC<RecommendationsProps> = ({ movies }) => {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const itemsPerPage = 3;
-
-  const handleNext = () => {
-    setActiveIndex((prevIndex) =>
-      Math.min(prevIndex + 1, Math.ceil(movies.length / itemsPerPage) - 1),
-    );
-  };
-
-  const handlePrev = () => {
-    setActiveIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-  };
-
-  return (
-    <>
-      <Typography
-        variant="h6"
-        gutterBottom
-      >
-        Recommendations
-      </Typography>
-      <div>
-        <Grid
-          container
-          spacing={2}
-          alignItems="center"
-        >
-          <Grid
-            item
-            xs={1}
-          >
-            <Button
-              onClick={handlePrev}
-              disabled={activeIndex === 0}
-            >
-              <NavigateBeforeIcon />
-            </Button>
-          </Grid>
-          <Grid
-            item
-            xs={10}
-          >
-            <Grid
-              container
-              spacing={2}
-            >
-              {movies
-                .slice(
-                  activeIndex * itemsPerPage,
-                  (activeIndex + 1) * itemsPerPage,
-                )
-                .map((item, index) => (
-                  <Grid
-                    item
-                    xs={4}
-                    key={index}
-                  >
-                    <Link to={`/movies/${item.id}`}>
-                      <img
-                        src={item.poster[0]}
-                        alt={`Image ${index}`}
-                        style={{ width: "100%" }}
-                      />
-                    </Link>
-                    <Typography sx={{ fontSize: "small" }}>
-                      {item.title}
-                    </Typography>
-                  </Grid>
-                ))}
-            </Grid>
-          </Grid>
-          <Grid
-            item
-            xs={1}
-          >
-            <Button
-              onClick={handleNext}
-              disabled={
-                activeIndex === Math.ceil(movies.length / itemsPerPage) - 1
-              }
-            >
-              <NavigateNextIcon />
-            </Button>
-          </Grid>
-        </Grid>
-      </div>
-    </>
-  );
-};
 
 interface DetailsProps {
   movie: MovieControllerFindOneResponse;
@@ -264,14 +141,7 @@ export default function Movie() {
           <Box sx={{ height: "40px" }} />
           <ReviewsList />
           <Box sx={{ height: "40px" }} />
-          <Recommendations
-            movies={[
-              testMovieInfo,
-              testMovieInfo,
-              testMovieInfo,
-              testMovieInfo,
-            ]}
-          />
+          <Recommendations />
         </Stack>
       </Box>
     </div>
