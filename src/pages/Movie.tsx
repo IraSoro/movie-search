@@ -25,7 +25,10 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { SwiperPosters } from "../components/Swipers";
 
 import { testMovieInfo } from "../../assets/testMovieInfo";
-import { FindOneResponse, kinopoiskApiV14 } from "../data/kinopoisk_api";
+import {
+  MovieControllerFindOneResponse,
+  kinopoiskApiV14,
+} from "../data/kinopoisk_api";
 
 interface Review {
   author: string;
@@ -257,7 +260,7 @@ const ListPagination: React.FC<ListProps> = ({ list }) => {
 };
 
 interface DetailsProps {
-  movie: FindOneResponse;
+  movie: MovieControllerFindOneResponse;
 }
 
 const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
@@ -330,7 +333,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
 export default function Movie() {
   const { id } = useParams<string>();
   console.log("id = ", id);
-  const [movieInfo, setMovieInfo] = useState<FindOneResponse>({
+  const [movieInfo, setMovieInfo] = useState<MovieControllerFindOneResponse>({
     name: "",
     type: "",
     description: "",
@@ -343,7 +346,7 @@ export default function Movie() {
 
   useEffect(() => {
     kinopoiskApiV14
-      .findOne({
+      .movieControllerFindOne({
         id: Number(id),
       })
       .then((resp) => {

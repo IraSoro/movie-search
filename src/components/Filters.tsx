@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import {
   kinopoiskApiV14,
-  PossibleValuesByFieldNameResponse,
+  MovieControllerPossibleValuesByFieldNameResponse,
 } from "../data/kinopoisk_api";
 
 interface FilterProps {
@@ -45,13 +45,13 @@ export const AgeRatingFilter = (props: FilterProps) => {
 
 export const CountryFilter = (props: FilterProps) => {
   const [countriesList, setCountriesList] = useState<
-    PossibleValuesByFieldNameResponse[]
+    MovieControllerPossibleValuesByFieldNameResponse[]
   >([]);
 
   useEffect(() => {
     if (countriesList.length !== 0) return;
     kinopoiskApiV14
-      .getPossibleValuesByFieldName()
+      .movieControllerGetPossibleValuesByFieldName()
       .then((resp) => {
         setCountriesList(resp);
       })

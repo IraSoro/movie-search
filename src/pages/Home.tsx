@@ -95,7 +95,7 @@ export default function Home() {
 
   function searchMovie() {
     kinopoiskApiV14
-      .searchMovies({
+      .movieControllerSearchMovies({
         page: page + 1,
         limit: 10,
         searchName: search,

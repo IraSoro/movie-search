@@ -50,12 +50,12 @@ async function movieControllerFindManyByQueryV14(
   return (await resp.json()) as MovieControllerFindManyByQueryResponse;
 }
 
-export interface PossibleValuesByFieldNameResponse {
+export interface MovieControllerPossibleValuesByFieldNameResponse {
   name: string;
   slug: string;
 }
 
-async function getPossibleValuesByFieldName() {
+async function movieControllerGetPossibleValuesByFieldName() {
   const resp = await fetch(
     "https://api.kinopoisk.dev/v1/movie/possible-values-by-field?field=countries.name",
     {
@@ -71,16 +71,16 @@ async function getPossibleValuesByFieldName() {
     // TODO: Make custom error type
     throw new Error(`Server returned incorrect status '${resp.status}'`);
   }
-  return (await resp.json()) as PossibleValuesByFieldNameResponse[];
+  return (await resp.json()) as MovieControllerPossibleValuesByFieldNameResponse[];
 }
 
-interface SearchMovieOptions {
+interface MovieControllerSearchMovieOptions {
   page: number;
   limit: number;
   searchName: string;
 }
 
-interface SearchMovieDoc {
+interface MovieControllerSearchMovieDoc {
   id: number;
   name: string;
   poster: {
@@ -89,12 +89,14 @@ interface SearchMovieDoc {
   };
 }
 
-interface SearchMovieResponse {
-  docs: SearchMovieDoc[];
+interface MovieControllerSearchMovieResponse {
+  docs: MovieControllerSearchMovieDoc[];
   total: number;
 }
 
-async function searchMovieV14(options: SearchMovieOptions) {
+async function movieControllerSearchMovieV14(
+  options: MovieControllerSearchMovieOptions,
+) {
   const resp = await fetch(
     `https://api.kinopoisk.dev/v1.4/movie/search?page=${options.page}&limit=${options.limit}&query=${options.searchName}`,
     {
@@ -111,10 +113,10 @@ async function searchMovieV14(options: SearchMovieOptions) {
     throw new Error(`Server returned incorrect status '${resp.status}'`);
   }
 
-  return (await resp.json()) as SearchMovieResponse;
+  return (await resp.json()) as MovieControllerSearchMovieResponse;
 }
 
-interface FindOneOptions {
+interface MovieControllerFindOneOptions {
   id: number;
 }
 
@@ -127,7 +129,7 @@ interface SimilarMovie {
   };
 }
 
-export interface FindOneResponse {
+export interface MovieControllerFindOneResponse {
   name: string;
   type: string;
   description: string;
@@ -138,7 +140,9 @@ export interface FindOneResponse {
   };
 }
 
-async function findOneV14(options: FindOneOptions) {
+async function movieControllerFindOneV14(
+  options: MovieControllerFindOneOptions,
+) {
   const resp = await fetch(
     `https://api.kinopoisk.dev/v1.4/movie/${options.id}`,
     {
@@ -155,7 +159,7 @@ async function findOneV14(options: FindOneOptions) {
     throw new Error(`Server returned incorrect status '${resp.status}'`);
   }
 
-  return (await resp.json()) as FindOneResponse;
+  return (await resp.json()) as MovieControllerFindOneResponse;
 }
 
 interface ImageControllerFindManyOptions {
@@ -198,8 +202,9 @@ async function imageControllerFindManyV14(
 
 export const kinopoiskApiV14 = {
   movieControllerFindManyByQuery: movieControllerFindManyByQueryV14,
-  getPossibleValuesByFieldName: getPossibleValuesByFieldName,
-  searchMovies: searchMovieV14,
-  findOne: findOneV14,
+  movieControllerGetPossibleValuesByFieldName:
+    movieControllerGetPossibleValuesByFieldName,
+  movieControllerSearchMovies: movieControllerSearchMovieV14,
+  movieControllerFindOne: movieControllerFindOneV14,
   imageControllerFindMany: imageControllerFindManyV14,
 };
