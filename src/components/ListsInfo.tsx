@@ -1,14 +1,103 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography } from "@mui/material";
+import {
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+  Pagination,
+} from "@mui/material";
+
+import PersonIcon from "@mui/icons-material/Person";
 
 import {
   kinopoiskApiV14,
   PersonControllerFindManyDocs,
+  ReviewControllerFindManyDocs,
   SeasonControllerFindManyDocs,
 } from "../data/kinopoisk_api";
 
-export const ListSeasons = () => {
+export const ReviewsList = () => {
+  const { id } = useParams<string>();
+  const limit = 5;
+  const [page, setPage] = useState(1);
+
+  const [total, setTotal] = useState(limit);
+  const [reviews, setReviews] = useState<ReviewControllerFindManyDocs[]>([]);
+
+  const pageCount = Math.ceil(total / limit);
+
+  useEffect(() => {
+    kinopoiskApiV14
+      .reviewControllerFindMany({
+        page: page,
+        limit: limit,
+        moviesId: Number(id),
+      })
+      .then((resp) => {
+        setReviews(resp.docs);
+        setTotal(resp.total);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, [id, page]);
+
+  if (reviews.length === 0) return <Typography>No information</Typography>;
+  return (
+    <div>
+      <Typography
+        variant="h6"
+        gutterBottom
+      >
+        Reviews
+      </Typography>
+      <List>
+        {reviews.map((review, index) => (
+          <ListItem
+            key={index}
+            sx={{
+              backgroundColor: "#f5f5f5",
+              borderRadius: 2,
+              marginBottom: 1,
+              alignItems: "flex-start",
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar>
+                <PersonIcon />
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText
+              primary={<strong>{review.author}</strong>}
+              secondary={review.review}
+            />
+          </ListItem>
+        ))}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "20px",
+          }}
+        >
+          <Pagination
+            count={pageCount}
+            page={page}
+            onChange={(e, newPage: number) => {
+              setPage(newPage);
+            }}
+            size="large"
+          />
+        </div>
+      </List>
+    </div>
+  );
+};
+
+export const SeasonsList = () => {
   const { id } = useParams<string>();
   const [total, setTotal] = useState(10);
   const [limit, setLimit] = useState(10);
@@ -91,7 +180,7 @@ export const ListSeasons = () => {
     );
 };
 
-export const ListActors = () => {
+export const ActorsList = () => {
   const { id } = useParams<string>();
   const [total, setTotal] = useState(10);
   const [limit, setLimit] = useState(10);

@@ -8,22 +8,15 @@ import {
   Box,
   Button,
   Stack,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Pagination,
 } from "@mui/material";
 
 import { Link } from "react-router-dom";
 
-import PersonIcon from "@mui/icons-material/Person";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import { SwiperPosters } from "../components/Swipers";
-import { ListActors, ListSeasons } from "../components/ListsInfo";
+import { ActorsList, SeasonsList, ReviewsList } from "../components/ListsInfo";
 
 import { testMovieInfo } from "../../assets/testMovieInfo";
 import {
@@ -142,75 +135,6 @@ const Recommendations: React.FC<RecommendationsProps> = ({ movies }) => {
   );
 };
 
-interface ReviewsProps {
-  reviews: Review[];
-}
-
-const ReviewList: React.FC<ReviewsProps> = ({ reviews }) => {
-  const [page, setPage] = useState(1);
-  const reviewsPerPage = 5;
-
-  const pageCount = Math.ceil(reviews.length / reviewsPerPage);
-
-  const handleChangePage = (
-    event: React.ChangeEvent<unknown>,
-    value: number,
-  ) => {
-    setPage(value);
-  };
-
-  const startIndex = (page - 1) * reviewsPerPage;
-  const endIndex = page * reviewsPerPage;
-  const currentReviews = reviews.slice(startIndex, endIndex);
-
-  return (
-    <div>
-      <Typography
-        variant="h6"
-        gutterBottom
-      >
-        Reviews
-      </Typography>
-      <List>
-        {currentReviews.map((review, index) => (
-          <ListItem
-            key={index}
-            sx={{
-              backgroundColor: "#f5f5f5",
-              borderRadius: 2,
-              marginBottom: 1,
-            }}
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <PersonIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={<strong>{review.author}</strong>}
-              secondary={review.comment}
-            />
-          </ListItem>
-        ))}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "20px",
-          }}
-        >
-          <Pagination
-            count={pageCount}
-            page={page}
-            onChange={handleChangePage}
-            size="large"
-          />
-        </div>
-      </List>
-    </div>
-  );
-};
-
 interface DetailsProps {
   movie: MovieControllerFindOneResponse;
 }
@@ -267,14 +191,14 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
             >
               Actors:
             </Typography>
-            <ListActors />
+            <ActorsList />
             <Typography
               variant="h6"
               component="h3"
             >
               Seasons:
             </Typography>
-            <ListSeasons />
+            <SeasonsList />
           </CardContent>
         </Grid>
       </Grid>
@@ -338,7 +262,7 @@ export default function Movie() {
           </Typography>
           <SwiperPosters />
           <Box sx={{ height: "40px" }} />
-          <ReviewList reviews={testMovieInfo.reviews} />
+          <ReviewsList />
           <Box sx={{ height: "40px" }} />
           <Recommendations
             movies={[

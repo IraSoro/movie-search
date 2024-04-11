@@ -275,6 +275,44 @@ async function seasonControllerFindManyV14(
   return (await resp.json()) as SeasonControllerFindManyResponse;
 }
 
+interface ReviewControllerFindManyOptions {
+  page: number;
+  limit: number;
+  moviesId: number;
+}
+
+export interface ReviewControllerFindManyDocs {
+  review: string;
+  author: string;
+}
+
+interface ReviewControllerFindManyResponse {
+  docs: ReviewControllerFindManyDocs[];
+  total: number;
+}
+
+async function reviewControllerFindManyV14(
+  options: ReviewControllerFindManyOptions,
+) {
+  const resp = await fetch(
+    `https://api.kinopoisk.dev/v1.4/review?page=${options.page}&limit=${options.limit}&selectFields=author&selectFields=review&notNullFields=author&notNullFields=review&movieId=${options.moviesId}`,
+    {
+      method: "GET",
+      headers: {
+        accept: "application/json",
+        "X-API-KEY": token,
+      },
+    },
+  );
+
+  if (resp.status !== 200) {
+    // TODO: Make custom error type
+    throw new Error(`Server returned incorrect status '${resp.status}'`);
+  }
+
+  return (await resp.json()) as ReviewControllerFindManyResponse;
+}
+
 export const kinopoiskApiV14 = {
   movieControllerFindManyByQuery: movieControllerFindManyByQueryV14,
   movieControllerGetPossibleValuesByFieldName:
@@ -284,4 +322,5 @@ export const kinopoiskApiV14 = {
   imageControllerFindMany: imageControllerFindManyV14,
   personControllerFindMany: personControllerFindManyV14,
   seasonControllerFindMany: seasonControllerFindManyV14,
+  reviewControllerFindMany: reviewControllerFindManyV14,
 };
