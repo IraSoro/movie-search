@@ -23,6 +23,7 @@ import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 
 import { SwiperPosters } from "../components/Swipers";
+import { ListActors } from "../components/ListsInfo";
 
 import { testMovieInfo } from "../../assets/testMovieInfo";
 import {
@@ -315,7 +316,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
             >
               Actors:
             </Typography>
-            <ListPagination list={["actor"]} />
+            <ListActors />
             <Typography
               variant="h6"
               component="h3"
