@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Typography, Grid, Button } from "@mui/material";
+import { Typography, Grid, Button, Box } from "@mui/material";
 
 import { Link } from "react-router-dom";
 
@@ -44,80 +44,68 @@ export const Recommendations = () => {
       >
         Recommendations
       </Typography>
-      <div>
+      <Box
+        sx={{
+          flexGrow: 1,
+          width: 700,
+          "@media (max-width: 600px)": {
+            width: "auto",
+          },
+        }}
+      >
+        <Grid
+          container
+          justifyContent="space-between"
+        >
+          <Button
+            onClick={() => {
+              setActiveIndex((prevIndex) => Math.max(prevIndex - 1, 0));
+            }}
+            disabled={activeIndex === 0}
+          >
+            <NavigateBeforeIcon />
+          </Button>
+          <Button
+            onClick={() => {
+              setActiveIndex((prevIndex) =>
+                Math.min(
+                  prevIndex + 1,
+                  Math.ceil(movies.length / itemsPerPage) - 1,
+                ),
+              );
+            }}
+            disabled={
+              activeIndex === Math.ceil(movies.length / itemsPerPage) - 1
+            }
+          >
+            <NavigateNextIcon />
+          </Button>
+        </Grid>
         <Grid
           container
           spacing={2}
           alignItems="center"
         >
-          <Grid
-            item
-            xs={1}
-          >
-            <Button
-              onClick={() => {
-                setActiveIndex((prevIndex) => Math.max(prevIndex - 1, 0));
-              }}
-              disabled={activeIndex === 0}
-            >
-              <NavigateBeforeIcon />
-            </Button>
-          </Grid>
-          <Grid
-            item
-            xs={10}
-          >
-            <Grid
-              container
-              spacing={2}
-            >
-              {movies
-                .slice(
-                  activeIndex * itemsPerPage,
-                  (activeIndex + 1) * itemsPerPage,
-                )
-                .map((movie, index) => (
-                  <Grid
-                    item
-                    xs={4}
-                    key={index}
-                  >
-                    <Link to={`/movies/${movie.id}`}>
-                      <img
-                        src={movie.poster.url}
-                        alt={`${movie.name} Image`}
-                        style={{ width: "100%" }}
-                      />
-                    </Link>
-                    <Typography sx={{ fontSize: "small" }}>
-                      {movie.name}
-                    </Typography>
-                  </Grid>
-                ))}
-            </Grid>
-          </Grid>
-          <Grid
-            item
-            xs={1}
-          >
-            <Button
-              onClick={() => {
-                setActiveIndex((prevIndex) =>
-                  Math.min(
-                    prevIndex + 1,
-                    Math.ceil(movies.length / itemsPerPage) - 1,
-                  ),
-                );
-              }}
-              disabled={
-                activeIndex === Math.ceil(movies.length / itemsPerPage) - 1
-              }
-            >
-              <NavigateNextIcon />
-            </Button>
-          </Grid>
+          {movies
+            .slice(activeIndex * itemsPerPage, (activeIndex + 1) * itemsPerPage)
+            .map((movie, index) => (
+              <Grid
+                item
+                xs={4}
+                key={index}
+              >
+                <Link to={`/movies/${movie.id}`}>
+                  <img
+                    src={movie.poster.url}
+                    alt={`${movie.name} Image`}
+                    style={{ width: "100%" }}
+                  />
+                </Link>
+                <Typography sx={{ fontSize: "small" }}>{movie.name}</Typography>
+              </Grid>
+            ))}
         </Grid>
-      </div>
+      </Box>
     </>
   );
 };
