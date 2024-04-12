@@ -183,7 +183,6 @@ export const ActorsList = () => {
   const [limit, setLimit] = useState(10);
   const [actors, setActors] = useState<PersonControllerFindManyDocs[]>([]);
   const [showAll, setShowAll] = useState(true);
-  const [fold, setFold] = useState(false);
 
   useEffect(() => {
     kinopoiskApiV14
@@ -204,55 +203,34 @@ export const ActorsList = () => {
   if (actors.length === 0) return <Typography>No information</Typography>;
   return (
     <>
-      <ul
+      {showAll ? (
+        <Typography>{actors.map((actor) => actor.name).join(", ")}</Typography>
+      ) : (
+        <Typography>
+          {actors
+            .slice(0, total)
+            .map((actor) => actor.name)
+            .join(", ")}
+        </Typography>
+      )}
+      <Typography
         style={{
-          listStyleType: "none",
-          padding: 0,
+          cursor: "pointer",
+          textDecoration: "underline",
+          color: "#474d4e",
+          marginBottom: "15px",
+        }}
+        onClick={() => {
+          setShowAll(!showAll);
+          if (showAll) {
+            setLimit(total);
+          } else {
+            setLimit(10);
+          }
         }}
       >
-        {showAll
-          ? actors.map((actor, index) => (
-              <Typography key={index}>{actor.name}</Typography>
-            ))
-          : actors
-              .slice(0, total)
-              .map((item, index) => (
-                <Typography key={index}>{item.name}</Typography>
-              ))}
-      </ul>
-      {showAll && actors.length < total && (
-        <Typography
-          style={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            color: "#474d4e",
-            marginBottom: "15px",
-          }}
-          onClick={() => {
-            setShowAll(false);
-            setFold(true);
-            setLimit(total);
-          }}
-        >
-          Show All
-        </Typography>
-      )}
-      {fold && (
-        <Typography
-          style={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            color: "#474d4e",
-            marginBottom: "15px",
-          }}
-          onClick={() => {
-            setShowAll(false);
-            setLimit(10);
-          }}
-        >
-          Fold
-        </Typography>
-      )}
+        {showAll ? "Show All" : "Fold"}
+      </Typography>
     </>
   );
 };
