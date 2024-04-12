@@ -16,13 +16,13 @@ export const AgeRatingFilter = (props: FilterProps) => {
   return (
     <FormControl
       variant="standard"
-      sx={{ m: 1, width: 110 }}
+      sx={{ m: 1, width: 130 }}
     >
-      <InputLabel>Age Rating</InputLabel>
+      <InputLabel>Возр. рейтинг</InputLabel>
       <Select
         autoWidth
         value={props.filter}
-        label="Year"
+        label="Age rating"
         onChange={(event) => {
           props.setFilter(event.target.value);
         }}
@@ -65,11 +65,11 @@ export const CountryFilter = (props: FilterProps) => {
       variant="standard"
       sx={{ m: 1, width: 90 }}
     >
-      <InputLabel>Country</InputLabel>
+      <InputLabel>Страна</InputLabel>
       <Select
         autoWidth
         value={props.filter}
-        label="Year"
+        label="Country"
         onChange={(event) => {
           props.setFilter(event.target.value);
         }}
@@ -107,7 +107,7 @@ export const YearFilter = (props: FilterProps) => {
       variant="standard"
       sx={{ m: 1, width: 90 }}
     >
-      <InputLabel>Year</InputLabel>
+      <InputLabel>Год</InputLabel>
       <Select
         autoWidth
         value={props.filter}

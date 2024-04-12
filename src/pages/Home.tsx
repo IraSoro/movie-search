@@ -151,7 +151,7 @@ export default function Home() {
         <TextField
           sx={{ marginBottom: "15px", marginTop: "15px" }}
           id="outlined-basic"
-          label="Search for movies and series"
+          label="Поиск фильмов и сериалов"
           variant="outlined"
           onChange={(event) => {
             setSearch(event.target.value);
@@ -191,6 +191,10 @@ export default function Home() {
               setLimit(parseInt(event.target.value, 10));
               setPage(0);
             }}
+            labelRowsPerPage="Лимит"
+            labelDisplayedRows={({ count }) =>
+              `${page + 1} из ${Math.ceil(count / limit)}`
+            }
           />
           <Grid
             container
