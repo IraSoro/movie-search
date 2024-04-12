@@ -132,12 +132,12 @@ export const SeasonsList = () => {
       >
         {showAll
           ? seasons.map((season, index) => (
-              <Typography key={index}>{`Season ${season.number}`}</Typography>
+              <Typography key={index}>{`Season ${index + 1}`}</Typography>
             ))
           : seasons
               .slice(0, total)
               .map((season, index) => (
-                <Typography key={index}>{`Season ${season.number}`}</Typography>
+                <Typography key={index}>{`Season ${index + 1}`}</Typography>
               ))}
       </ul>
       {showAll && seasons.length < total && (
@@ -166,7 +166,8 @@ export const SeasonsList = () => {
             marginBottom: "15px",
           }}
           onClick={() => {
-            setShowAll(false);
+            setShowAll(true);
+            setFold(false);
             setLimit(10);
           }}
         >
