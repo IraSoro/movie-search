@@ -78,7 +78,7 @@ export default function Home() {
   const [filtersSearch, setFiltersSearch] = useState(false);
 
   useEffect(() => {
-    if (filtersSearch) {
+    if (!search.length || filtersSearch) {
       kinopoiskApiV14
         .movieControllerFindManyByQuery({
           page: page + 1,
