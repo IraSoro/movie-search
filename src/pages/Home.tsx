@@ -23,6 +23,7 @@ import {
   kinopoiskApiV14,
   MovieControllerFindManyByQueryDoc,
 } from "../data/kinopoisk_api";
+import { debounce } from "../data/utils";
 
 interface PropsItem {
   movie: MovieControllerFindManyByQueryDoc;
@@ -183,7 +184,9 @@ export default function Home() {
             label="Поиск фильмов и сериалов"
             variant="outlined"
             onChange={(event) => {
-              setSearch(event.target.value);
+              debounce(() => {
+                setSearch(event.target.value);
+              }, 1 * 1000);
             }}
             InputProps={{
               endAdornment: (
