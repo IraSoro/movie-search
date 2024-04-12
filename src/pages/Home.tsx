@@ -4,12 +4,11 @@ import {
   Box,
   Grid,
   IconButton,
-  ImageListItem,
-  ImageListItemBar,
   InputAdornment,
   Stack,
   TablePagination,
   TextField,
+  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 
@@ -31,34 +30,33 @@ interface PropsItem {
 const Item: React.FC<PropsItem> = ({ movie }) => {
   return (
     <>
-      <ImageListItem key={movie.id}>
-        <Link to={`movies/${movie.id}`}>
-          <Box
-            sx={{
-              height: 350,
-              width: "auto",
-              maxWidth: 250,
-              "@media (max-width: 600px)": {
-                height: 250,
-                maxWidth: 180,
-              },
-            }}
-          >
-            <img
-              style={{
-                width: "100%",
-                height: "100%",
+      <Box key={movie.id}>
+        <Stack>
+          <Link to={`movies/${movie.id}`}>
+            <Box
+              sx={{
+                height: 350,
+                width: "auto",
+                maxWidth: 250,
+                "@media (max-width: 600px)": {
+                  height: 250,
+                  maxWidth: 180,
+                },
               }}
-              src={movie.poster.url}
-              loading="lazy"
-            />
-          </Box>
-        </Link>
-        <ImageListItemBar
-          title={movie.name}
-          position="below"
-        />
-      </ImageListItem>
+            >
+              <img
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+                src={movie.poster.url}
+                loading="lazy"
+              />
+            </Box>
+          </Link>
+          <Typography>{movie.name}</Typography>
+        </Stack>
+      </Box>
     </>
   );
 };
