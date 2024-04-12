@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Box,
+  Button,
   Grid,
   IconButton,
   InputAdornment,
@@ -73,101 +74,128 @@ export default function Home() {
   const [country, setCountry] = useState("");
   const [ageRating, setAgeRating] = useState("");
 
-  useEffect(() => {
-    kinopoiskApiV14
-      .movieControllerFindManyByQuery({
-        page: page + 1,
-        limit: limit,
-        year: year,
-        country: country,
-        ageRating: ageRating,
-      })
-      .then((resp) => {
-        setArray(resp.docs);
-        setTotal(resp.total);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [page, limit, year, country, ageRating]);
+  const [filtersSearch, setFiltersSearch] = useState(false);
 
-  function searchMovie() {
-    kinopoiskApiV14
-      .movieControllerSearchMovies({
-        page: page + 1,
-        limit: 10,
-        searchName: search,
-      })
-      .then((resp) => {
-        setArray(resp.docs);
-        setTotal(resp.total);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }
+  useEffect(() => {
+    if (filtersSearch) {
+      kinopoiskApiV14
+        .movieControllerFindManyByQuery({
+          page: page + 1,
+          limit: limit,
+          year: year,
+          country: country,
+          ageRating: ageRating,
+        })
+        .then((resp) => {
+          setArray(resp.docs);
+          setTotal(resp.total);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      kinopoiskApiV14
+        .movieControllerSearchMovies({
+          page: page + 1,
+          limit: limit,
+          searchName: search,
+        })
+        .then((resp) => {
+          setArray(resp.docs);
+          setTotal(resp.total);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  }, [page, limit, year, country, ageRating, search, filtersSearch]);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        minHeight: "100vh",
+      }}
+    >
       <Stack>
-        <Grid
-          container
-          alignItems="start"
-          sx={{ maxWidth: "280px" }}
+        <Button
+          sx={{
+            marginTop: "5px",
+            marginBottom: "5px",
+            maxWidth: "200px",
+            borderRadius: "15px",
+            boxShadow: "none",
+            marginLeft: "auto",
+          }}
+          color="inherit"
+          variant="contained"
+          size="small"
+          onClick={() => {
+            setFiltersSearch(!filtersSearch);
+            setPage(0);
+          }}
         >
+          {filtersSearch ? "Поиск по названию" : "Поиск по фильтрам"}
+        </Button>
+        {filtersSearch && (
           <Grid
-            item
-            xs={12}
-            md={4}
+            container
+            alignItems="start"
+            sx={{ maxWidth: "280px" }}
           >
-            <YearFilter
-              filter={year}
-              setFilter={setYear}
-            />
+            <Grid
+              item
+              xs={12}
+              md={4}
+            >
+              <YearFilter
+                filter={year}
+                setFilter={setYear}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={4}
+            >
+              <CountryFilter
+                filter={country}
+                setFilter={setCountry}
+              />
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              md={4}
+            >
+              <AgeRatingFilter
+                filter={ageRating}
+                setFilter={setAgeRating}
+              />
+            </Grid>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            md={4}
-          >
-            <CountryFilter
-              filter={country}
-              setFilter={setCountry}
-            />
-          </Grid>
-          <Grid
-            item
-            xs={12}
-            md={4}
-          >
-            <AgeRatingFilter
-              filter={ageRating}
-              setFilter={setAgeRating}
-            />
-          </Grid>
-        </Grid>
-        <TextField
-          sx={{ marginBottom: "15px", marginTop: "15px" }}
-          id="outlined-basic"
-          label="Поиск фильмов и сериалов"
-          variant="outlined"
-          onChange={(event) => {
-            setSearch(event.target.value);
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => {
-                    searchMovie();
-                  }}
-                >
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        ></TextField>
+        )}
+        {!filtersSearch && (
+          <TextField
+            sx={{ marginBottom: "15px", marginTop: "15px" }}
+            id="outlined-basic"
+            label="Поиск фильмов и сериалов"
+            variant="outlined"
+            onChange={(event) => {
+              setSearch(event.target.value);
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          ></TextField>
+        )}
         <Box
           sx={{
             flexGrow: 1,
