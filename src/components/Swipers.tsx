@@ -25,7 +25,15 @@ export const SwiperPosters = () => {
   }, [id]);
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box
+      sx={{
+        flexGrow: 1,
+        width: 700,
+        "@media (max-width: 600px)": {
+          width: "auto",
+        },
+      }}
+    >
       <MobileStepper
         steps={images.length}
         position="static"
@@ -57,10 +65,14 @@ export const SwiperPosters = () => {
       <Box
         component="img"
         sx={{
-          height: "250px",
-          maxWidth: "auto",
+          height: "auto",
+          maxWidth: 500,
+          "@media (max-width: 600px)": {
+            maxWidth: 300,
+          },
           display: "block",
           overflow: "hidden",
+          margin: "0 auto",
         }}
         src={
           images.length !== 0 ? images[activeStep].url : "assets/default.jpg"
