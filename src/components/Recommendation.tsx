@@ -104,6 +104,9 @@ export const Recommendations = () => {
                     alt={`${movie.name} Image`}
                     style={{ width: "100%" }}
                     onClick={() => {
+                      globalThis.scrollTo({
+                        top: 0,
+                      });
                       navigate(`/movies/${movie.id}`, {
                         replace: true,
                       });

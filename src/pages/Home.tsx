@@ -298,6 +298,9 @@ export default function Home() {
                 ageRating: ageRating,
               });
               setPage(newPage);
+              globalThis.scrollTo({
+                top: 0,
+              });
             }}
             rowsPerPage={limit}
             onRowsPerPageChange={(event) => {
