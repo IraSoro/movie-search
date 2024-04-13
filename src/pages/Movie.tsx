@@ -10,6 +10,7 @@ import {
   Button,
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
+import GradeIcon from "@mui/icons-material/Grade";
 
 import { SwiperPosters } from "../components/Swipers";
 import { ActorsList, SeasonsList, ReviewsList } from "../components/ListsInfo";
@@ -52,7 +53,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
                 display: "block",
                 overflow: "hidden",
               }}
-              src={movie.poster.url}
+              src={movie.poster.url ? movie.poster.url : "assets/default.jpg"}
               alt={`${movie.name} poster`}
             />
           </Card>
@@ -66,22 +67,23 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
             <Typography
               variant="h6"
               component="h3"
+              style={{ display: "flex", alignItems: "center" }}
             >
-              Movie rating{" "}
-              <span style={{ color: "#474d4e" }}>{movie.rating.kp}</span>
+              <GradeIcon />
+              <span style={{ color: "#474d4e" }}>&nbsp;{movie.rating.kp}</span>
             </Typography>
             <Typography
               variant="h6"
               component="h3"
             >
-              Actors:
+              Актеры:
             </Typography>
             <ActorsList />
             <Typography
               variant="h6"
               component="h3"
             >
-              Seasons:
+              Сезоны:
             </Typography>
             <SeasonsList />
           </CardContent>
@@ -145,7 +147,7 @@ export default function Movie() {
             variant="h6"
             gutterBottom
           >
-            About movies
+            Описание
           </Typography>
           <Typography
             variant="body1"
@@ -159,7 +161,7 @@ export default function Movie() {
             variant="h6"
             gutterBottom
           >
-            Posters
+            Постеры
           </Typography>
           <SwiperPosters />
           <Box sx={{ height: "40px" }} />

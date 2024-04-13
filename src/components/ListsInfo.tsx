@@ -8,9 +8,12 @@ import {
   ListItemAvatar,
   Avatar,
   Pagination,
+  Button,
 } from "@mui/material";
 
 import PersonIcon from "@mui/icons-material/Person";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 
 import {
   kinopoiskApiV14,
@@ -45,14 +48,14 @@ export const ReviewsList = () => {
       });
   }, [id, page]);
 
-  if (reviews.length === 0) return <Typography>No information</Typography>;
+  if (reviews.length === 0) return <Typography>Нет информации</Typography>;
   return (
     <div>
       <Typography
         variant="h6"
         gutterBottom
       >
-        Reviews
+        Рецензии зрителей
       </Typography>
       <List>
         {reviews.map((review, index) => (
@@ -121,7 +124,7 @@ export const SeasonsList = () => {
       });
   }, [id, limit]);
 
-  if (seasons.length === 0) return <Typography>No information</Typography>;
+  if (seasons.length === 0) return <Typography>Нет информации</Typography>;
   return (
     <>
       <ul
@@ -130,49 +133,64 @@ export const SeasonsList = () => {
           padding: 0,
         }}
       >
-        {showAll
-          ? seasons.map((season, index) => (
-              <Typography key={index}>{`Season ${index + 1}`}</Typography>
-            ))
-          : seasons
+        {showAll ? (
+          <Typography>
+            {seasons.map((_season, index) => `Season ${index + 1}`).join(", ")}
+          </Typography>
+        ) : (
+          <Typography>
+            {seasons
               .slice(0, total)
-              .map((season, index) => (
-                <Typography key={index}>{`Season ${index + 1}`}</Typography>
-              ))}
+              .map((_season, index) => `Season ${index + 1}`)
+              .join(", ")}
+          </Typography>
+        )}
       </ul>
       {showAll && seasons.length < total && (
-        <Typography
-          style={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            color: "#474d4e",
-            marginBottom: "15px",
-          }}
-          onClick={() => {
-            setShowAll(false);
-            setFold(true);
-            setLimit(total);
-          }}
-        >
-          Show All
-        </Typography>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            sx={{
+              borderRadius: "20px",
+              boxShadow: "none",
+              color: "#000000",
+              marginTop: "5px",
+            }}
+            color="inherit"
+            variant="contained"
+            size="small"
+            endIcon={<ArrowDropDownIcon />}
+            onClick={() => {
+              setShowAll(false);
+              setFold(true);
+              setLimit(total);
+            }}
+          >
+            Показать все
+          </Button>
+        </div>
       )}
       {fold && (
-        <Typography
-          style={{
-            cursor: "pointer",
-            textDecoration: "underline",
-            color: "#474d4e",
-            marginBottom: "15px",
-          }}
-          onClick={() => {
-            setShowAll(true);
-            setFold(false);
-            setLimit(10);
-          }}
-        >
-          Fold
-        </Typography>
+        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            sx={{
+              borderRadius: "20px",
+              boxShadow: "none",
+              color: "#000000",
+              marginTop: "5px",
+            }}
+            color="inherit"
+            variant="contained"
+            size="small"
+            endIcon={<ArrowDropUpIcon />}
+            onClick={() => {
+              setShowAll(true);
+              setFold(false);
+              setLimit(10);
+            }}
+          >
+            Свернуть
+          </Button>
+        </div>
       )}
     </>
   );
@@ -201,7 +219,7 @@ export const ActorsList = () => {
       });
   }, [id, limit]);
 
-  if (actors.length === 0) return <Typography>No information</Typography>;
+  if (actors.length === 0) return <Typography>Нет информации</Typography>;
   return (
     <>
       {showAll ? (
@@ -214,24 +232,30 @@ export const ActorsList = () => {
             .join(", ")}
         </Typography>
       )}
-      <Typography
-        style={{
-          cursor: "pointer",
-          textDecoration: "underline",
-          color: "#474d4e",
-          marginBottom: "15px",
-        }}
-        onClick={() => {
-          setShowAll(!showAll);
-          if (showAll) {
-            setLimit(total);
-          } else {
-            setLimit(10);
-          }
-        }}
-      >
-        {showAll ? "Show All" : "Fold"}
-      </Typography>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          sx={{
+            borderRadius: "20px",
+            boxShadow: "none",
+            color: "#000000",
+            marginTop: "5px",
+          }}
+          color="inherit"
+          variant="contained"
+          size="small"
+          endIcon={showAll ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+          onClick={() => {
+            setShowAll(!showAll);
+            if (showAll) {
+              setLimit(total);
+            } else {
+              setLimit(10);
+            }
+          }}
+        >
+          {showAll ? "Показать все" : "Свернуть"}
+        </Button>
+      </div>
     </>
   );
 };

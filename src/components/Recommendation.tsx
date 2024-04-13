@@ -41,7 +41,7 @@ export const Recommendations = () => {
         variant="h6"
         gutterBottom
       >
-        Recommendations
+        Может понравится
       </Typography>
       <Box
         sx={{
@@ -57,6 +57,7 @@ export const Recommendations = () => {
           justifyContent="space-between"
         >
           <Button
+            color="inherit"
             onClick={() => {
               setActiveIndex((prevIndex) => Math.max(prevIndex - 1, 0));
             }}
@@ -65,6 +66,7 @@ export const Recommendations = () => {
             <NavigateBeforeIcon />
           </Button>
           <Button
+            color="inherit"
             onClick={() => {
               setActiveIndex((prevIndex) =>
                 Math.min(

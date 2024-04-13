@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, MobileStepper, Button } from "@mui/material";
 
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+
 import { kinopoiskApiV14, OneImage } from "../data/kinopoisk_api";
 
 export const SwiperPosters = () => {
@@ -42,23 +45,25 @@ export const SwiperPosters = () => {
         nextButton={
           <Button
             size="small"
+            color="inherit"
             onClick={() => {
               setActiveStep((prevActiveStep) => prevActiveStep + 1);
             }}
             disabled={activeStep === images.length - 1}
           >
-            Next
+            <NavigateNextIcon />
           </Button>
         }
         backButton={
           <Button
             size="small"
+            color="inherit"
             onClick={() => {
               setActiveStep((prevActiveStep) => prevActiveStep - 1);
             }}
             disabled={activeStep === 0}
           >
-            Back
+            <NavigateBeforeIcon />
           </Button>
         }
       />
