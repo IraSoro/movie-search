@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack --progress --config webpack.prod.mjs",
-    "start": "webpack serve --config webpack.prod.mjs",
-    "dev": "webpack serve --config webpack.dev.mjs",
+    "start": "webpack serve --mode production --config webpack.prod.mjs",
+    "dev": "webpack serve --mode development --config webpack.dev.mjs",
     "lint": "eslint --ext .ts --ext .tsx .",
     "fmt": "prettier --write .",
-    "fmt:check": "prettier --check ."
+    "fmt:check": "prettier --check .",
+    "test:all": "echo 'test'\n"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +22,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.15",
     "@mui/material": "^5.15.15",
+    "@types/react-dom": "^18.2.25",
     "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^7.5.0",
     "@typescript-eslint/parser": "^7.5.0",
