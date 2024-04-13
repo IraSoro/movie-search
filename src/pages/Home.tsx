@@ -76,13 +76,18 @@ export default function Home() {
     Number(searchParams.get("limit")) || defaultLimit,
   );
 
-  const [year, setYear] = useState("");
-  const [country, setCountry] = useState("");
-  const [ageRating, setAgeRating] = useState("");
+  const [year, setYear] = useState(searchParams.get("year") || "");
+  const [country, setCountry] = useState(searchParams.get("country") || "");
+  const [ageRating, setAgeRating] = useState(
+    searchParams.get("ageRating") || "",
+  );
 
   const [filtersSearch, setFiltersSearch] = useState(false);
 
   useEffect(() => {
+    if (year !== "" || country !== "" || ageRating !== "") {
+      setFiltersSearch(true);
+    }
     if (!search.length || filtersSearch) {
       kinopoiskApiV14
         .movieControllerFindManyByQuery({
@@ -116,6 +121,12 @@ export default function Home() {
     }
   }, [page, limit, year, country, ageRating, search, filtersSearch]);
 
+  function clearFilters() {
+    setYear("");
+    setCountry("");
+    setAgeRating("");
+  }
+
   return (
     <div
       style={{
@@ -139,12 +150,17 @@ export default function Home() {
           size="small"
           onClick={() => {
             setSearchParams({
-              query: search,
+              query: "",
               page: "0",
               limit: defaultLimit.toString(),
+              year: "",
+              country: "",
+              ageRating: "",
             });
             setFiltersSearch(!filtersSearch);
             setPage(0);
+            setSearch("");
+            clearFilters();
           }}
         >
           {filtersSearch ? "Поиск по названию" : "Поиск по фильтрам"}
@@ -162,7 +178,16 @@ export default function Home() {
             >
               <YearFilter
                 filter={year}
-                setFilter={setYear}
+                setFilter={(newYear: string) => {
+                  setYear(newYear);
+                  setSearchParams({
+                    page: page.toString(),
+                    limit: defaultLimit.toString(),
+                    year: newYear,
+                    country: country,
+                    ageRating: ageRating,
+                  });
+                }}
               />
             </Grid>
             <Grid
@@ -172,7 +197,16 @@ export default function Home() {
             >
               <CountryFilter
                 filter={country}
-                setFilter={setCountry}
+                setFilter={(newCountry: string) => {
+                  setCountry(newCountry);
+                  setSearchParams({
+                    page: page.toString(),
+                    limit: defaultLimit.toString(),
+                    year: year,
+                    country: newCountry,
+                    ageRating: ageRating,
+                  });
+                }}
               />
             </Grid>
             <Grid
@@ -182,7 +216,16 @@ export default function Home() {
             >
               <AgeRatingFilter
                 filter={ageRating}
-                setFilter={setAgeRating}
+                setFilter={(newAgeRating: string) => {
+                  setAgeRating(newAgeRating);
+                  setSearchParams({
+                    page: page.toString(),
+                    limit: defaultLimit.toString(),
+                    year: year,
+                    country: country,
+                    ageRating: newAgeRating,
+                  });
+                }}
               />
             </Grid>
           </Grid>
@@ -234,6 +277,9 @@ export default function Home() {
                 query: search,
                 page: newPage.toString(),
                 limit: limit.toString(),
+                year: year,
+                country: country,
+                ageRating: ageRating,
               });
               setPage(newPage);
             }}
@@ -243,6 +289,9 @@ export default function Home() {
                 query: search,
                 page: "0",
                 limit: parseInt(event.target.value, 10).toString(),
+                year: year,
+                country: country,
+                ageRating: ageRating,
               });
               setLimit(parseInt(event.target.value, 10));
               setPage(0);
