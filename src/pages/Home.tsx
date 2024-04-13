@@ -268,58 +268,65 @@ export default function Home() {
             },
           }}
         >
-          <Grid
-            container
-            spacing={{ xs: 1, md: 2 }}
-          >
-            {Array.from(array).map((movie, idx) => (
+          {array.length ? (
+            <>
               <Grid
-                item
-                xs={6}
-                sm={6}
-                md={4}
-                key={idx}
+                container
+                spacing={{ xs: 1, md: 2 }}
               >
-                <Item movie={movie} />
+                {Array.from(array).map((movie, idx) => (
+                  <Grid
+                    item
+                    xs={6}
+                    sm={6}
+                    md={4}
+                    key={idx}
+                  >
+                    <Item movie={movie} />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-          <TablePagination
-            component="div"
-            count={total}
-            page={page}
-            onPageChange={(event, newPage: number) => {
-              setSearchParams({
-                query: search,
-                page: newPage.toString(),
-                limit: limit.toString(),
-                year: year,
-                country: country,
-                ageRating: ageRating,
-              });
-              setPage(newPage);
-              globalThis.scrollTo({
-                top: 0,
-              });
-            }}
-            rowsPerPage={limit}
-            onRowsPerPageChange={(event) => {
-              setSearchParams({
-                query: search,
-                page: "0",
-                limit: parseInt(event.target.value, 10).toString(),
-                year: year,
-                country: country,
-                ageRating: ageRating,
-              });
-              setLimit(parseInt(event.target.value, 10));
-              setPage(0);
-            }}
-            labelRowsPerPage="Лимит"
-            labelDisplayedRows={({ count }) =>
-              `${page + 1} из ${Math.ceil(count / limit)}`
-            }
-          />
+
+              <TablePagination
+                component="div"
+                count={total}
+                page={page}
+                onPageChange={(event, newPage: number) => {
+                  setSearchParams({
+                    query: search,
+                    page: newPage.toString(),
+                    limit: limit.toString(),
+                    year: year,
+                    country: country,
+                    ageRating: ageRating,
+                  });
+                  setPage(newPage);
+                  globalThis.scrollTo({
+                    top: 0,
+                  });
+                }}
+                rowsPerPage={limit}
+                onRowsPerPageChange={(event) => {
+                  setSearchParams({
+                    query: search,
+                    page: "0",
+                    limit: parseInt(event.target.value, 10).toString(),
+                    year: year,
+                    country: country,
+                    ageRating: ageRating,
+                  });
+                  setLimit(parseInt(event.target.value, 10));
+                  setPage(0);
+                }}
+                labelRowsPerPage="Лимит"
+                labelDisplayedRows={({ count }) =>
+                  `${page + 1} из ${Math.ceil(count / limit)}`
+                }
+              />
+            </>
+          ) : (
+            <Typography variant="h5">Ничего не найдено🤔</Typography>
+          )}
         </Box>
       </Stack>
     </div>
