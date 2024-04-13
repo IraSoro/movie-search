@@ -48,7 +48,6 @@ export const ReviewsList = () => {
       });
   }, [id, page]);
 
-  if (reviews.length === 0) return <Typography>Нет информации</Typography>;
   return (
     <div>
       <Typography
@@ -57,45 +56,49 @@ export const ReviewsList = () => {
       >
         Рецензии зрителей
       </Typography>
-      <List>
-        {reviews.map((review, index) => (
-          <ListItem
-            key={index}
-            sx={{
-              backgroundColor: "#f5f5f5",
-              borderRadius: 2,
-              marginBottom: 1,
-              alignItems: "flex-start",
+      {reviews.length === 0 ? (
+        <Typography>Нет информации</Typography>
+      ) : (
+        <List>
+          {reviews.map((review, index) => (
+            <ListItem
+              key={index}
+              sx={{
+                backgroundColor: "#f5f5f5",
+                borderRadius: 2,
+                marginBottom: 1,
+                alignItems: "flex-start",
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar>
+                  <PersonIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={<strong>{review.author}</strong>}
+                secondary={review.review}
+              />
+            </ListItem>
+          ))}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "20px",
             }}
           >
-            <ListItemAvatar>
-              <Avatar>
-                <PersonIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={<strong>{review.author}</strong>}
-              secondary={review.review}
+            <Pagination
+              count={pageCount}
+              page={page}
+              onChange={(e, newPage: number) => {
+                setPage(newPage);
+              }}
+              size="large"
             />
-          </ListItem>
-        ))}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "20px",
-          }}
-        >
-          <Pagination
-            count={pageCount}
-            page={page}
-            onChange={(e, newPage: number) => {
-              setPage(newPage);
-            }}
-            size="large"
-          />
-        </div>
-      </List>
+          </div>
+        </List>
+      )}
     </div>
   );
 };
