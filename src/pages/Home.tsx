@@ -268,6 +268,22 @@ export default function Home() {
             },
           }}
         >
+          <Grid
+            container
+            spacing={{ xs: 1, md: 2 }}
+          >
+            {Array.from(array).map((movie, idx) => (
+              <Grid
+                item
+                xs={6}
+                sm={6}
+                md={4}
+                key={idx}
+              >
+                <Item movie={movie} />
+              </Grid>
+            ))}
+          </Grid>
           <TablePagination
             component="div"
             count={total}
@@ -301,22 +317,6 @@ export default function Home() {
               `${page + 1} из ${Math.ceil(count / limit)}`
             }
           />
-          <Grid
-            container
-            spacing={{ xs: 1, md: 2 }}
-          >
-            {Array.from(array).map((movie, idx) => (
-              <Grid
-                item
-                xs={6}
-                sm={6}
-                md={4}
-                key={idx}
-              >
-                <Item movie={movie} />
-              </Grid>
-            ))}
-          </Grid>
         </Box>
       </Stack>
     </div>
