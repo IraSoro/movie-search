@@ -53,7 +53,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
                 display: "block",
                 overflow: "hidden",
               }}
-              src={movie.poster.url || "./assets/default.jpg"}
+              src={movie.poster.previewUrl || "./assets/default.jpg"}
               alt={`${movie.name} poster`}
             />
           </Card>
@@ -105,7 +105,7 @@ export default function Movie() {
     alternativeName: "",
     type: "",
     description: "",
-    poster: { url: "" },
+    poster: { url: "", previewUrl: "" },
     similarMovies: [],
     rating: {
       kp: 0,

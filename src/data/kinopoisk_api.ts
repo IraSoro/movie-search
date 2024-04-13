@@ -136,7 +136,7 @@ export interface MovieControllerFindOneResponse {
   alternativeName: string;
   type: string;
   description: string;
-  poster: { url: string };
+  poster: { url: string, previewUrl: string };
   similarMovies: SimilarMovie[];
   rating: {
     kp: number;

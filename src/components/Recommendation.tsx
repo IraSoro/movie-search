@@ -100,7 +100,7 @@ export const Recommendations = () => {
                   key={index}
                 >
                   <img
-                    src={movie.poster.url}
+                    src={movie.poster.previewUrl}
                     alt={`${movie.name} Image`}
                     style={{ width: "100%" }}
                     onClick={() => {
