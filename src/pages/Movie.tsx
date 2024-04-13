@@ -79,13 +79,17 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
               Актеры:
             </Typography>
             <ActorsList />
-            <Typography
-              variant="h6"
-              component="h3"
-            >
-              Сезоны:
-            </Typography>
-            <SeasonsList />
+            {movie.type.includes("series") && (
+              <>
+                <Typography
+                  variant="h6"
+                  component="h3"
+                >
+                  Сезоны:
+                </Typography>
+                <SeasonsList />
+              </>
+            )}
           </CardContent>
         </Grid>
       </Grid>
