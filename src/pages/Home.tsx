@@ -51,7 +51,7 @@ const Item: React.FC<PropsItem> = ({ movie }) => {
                   width: "100%",
                   height: "100%",
                 }}
-                src={movie.poster.url}
+                src={movie.poster.url || "./assets/default.jpg"}
                 loading="lazy"
               />
             </Box>

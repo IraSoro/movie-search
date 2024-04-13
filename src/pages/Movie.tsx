@@ -26,6 +26,7 @@ interface DetailsProps {
 }
 
 const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
+  console.log(JSON.stringify(movie.poster.url || "default poster"));
   return (
     <>
       <Typography
@@ -53,7 +54,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
                 display: "block",
                 overflow: "hidden",
               }}
-              src={movie.poster.url ? movie.poster.url : "assets/default.jpg"}
+              src={movie.poster.url || "./assets/default.jpg"}
               alt={`${movie.name} poster`}
             />
           </Card>
