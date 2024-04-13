@@ -26,7 +26,6 @@ interface DetailsProps {
 }
 
 const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
-  console.log(JSON.stringify(movie.poster.url || "default poster"));
   return (
     <>
       <Typography
