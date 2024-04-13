@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Typography, Grid, Card, CardContent, Box, Stack } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  Stack,
+  Button,
+} from "@mui/material";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 import { SwiperPosters } from "../components/Swipers";
 import { ActorsList, SeasonsList, ReviewsList } from "../components/ListsInfo";
@@ -84,8 +92,8 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
 };
 
 export default function Movie() {
+  const navigate = useNavigate();
   const { id } = useParams<string>();
-  console.log("id = ", id);
   const [movieInfo, setMovieInfo] = useState<MovieControllerFindOneResponse>({
     name: "",
     type: "",
@@ -114,7 +122,23 @@ export default function Movie() {
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Box sx={{ flexGrow: 1, maxWidth: 700 }}>
         <Stack>
-          <Link to="/">Back to Movie Search</Link>
+          <Button
+            sx={{
+              borderRadius: "20px",
+              boxShadow: "none",
+              color: "#000000",
+              marginRight: "auto",
+              maxWidth: "250px",
+            }}
+            startIcon={<ArrowBackIosIcon />}
+            color="inherit"
+            variant="contained"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            Назад к поиску
+          </Button>
           <MovieDetails movie={movieInfo} />
           <Box sx={{ height: "40px" }} />
           <Typography

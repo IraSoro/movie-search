@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Typography, Grid, Button, Box } from "@mui/material";
-
-import { Link } from "react-router-dom";
 
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
@@ -13,6 +11,7 @@ import {
 } from "../data/kinopoisk_api";
 
 export const Recommendations = () => {
+  const navigate = useNavigate();
   const { id } = useParams<string>();
   const itemsPerPage = 3;
 
@@ -94,13 +93,16 @@ export const Recommendations = () => {
                 xs={4}
                 key={index}
               >
-                <Link to={`/movies/${movie.id}`}>
-                  <img
-                    src={movie.poster.url}
-                    alt={`${movie.name} Image`}
-                    style={{ width: "100%" }}
-                  />
-                </Link>
+                <img
+                  src={movie.poster.url}
+                  alt={`${movie.name} Image`}
+                  style={{ width: "100%" }}
+                  onClick={() => {
+                    navigate(`/movies/${movie.id}`, {
+                      replace: true,
+                    });
+                  }}
+                />
                 <Typography sx={{ fontSize: "small" }}>{movie.name}</Typography>
               </Grid>
             ))}
