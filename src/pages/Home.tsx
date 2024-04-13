@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -64,12 +64,17 @@ const Item: React.FC<PropsItem> = ({ movie }) => {
 };
 
 export default function Home() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [total, setTotal] = useState(0);
   const [array, setArray] = useState<MovieControllerFindManyByQueryDoc[]>([]);
 
-  const [search, setSearch] = useState("");
-  const [page, setPage] = useState(0);
-  const [limit, setLimit] = useState(10);
+  const defaultLimit = 10;
+  const [search, setSearch] = useState(searchParams.get("query") || "");
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 0);
+  const [limit, setLimit] = useState(
+    Number(searchParams.get("limit")) || defaultLimit,
+  );
 
   const [year, setYear] = useState("");
   const [country, setCountry] = useState("");
@@ -133,6 +138,11 @@ export default function Home() {
           variant="contained"
           size="small"
           onClick={() => {
+            setSearchParams({
+              query: search,
+              page: "0",
+              limit: defaultLimit.toString(),
+            });
             setFiltersSearch(!filtersSearch);
             setPage(0);
           }}
@@ -183,10 +193,17 @@ export default function Home() {
             id="outlined-basic"
             label="Поиск фильмов и сериалов"
             variant="outlined"
+            defaultValue={search || ""}
             onChange={(event) => {
               debounce(() => {
+                setSearchParams({
+                  query: event.target.value,
+                  page: "0",
+                  limit: defaultLimit.toString(),
+                });
                 setSearch(event.target.value);
               }, 1 * 1000);
+              setPage(0);
             }}
             InputProps={{
               endAdornment: (
@@ -213,10 +230,20 @@ export default function Home() {
             count={total}
             page={page}
             onPageChange={(event, newPage: number) => {
+              setSearchParams({
+                query: search,
+                page: newPage.toString(),
+                limit: limit.toString(),
+              });
               setPage(newPage);
             }}
             rowsPerPage={limit}
             onRowsPerPageChange={(event) => {
+              setSearchParams({
+                query: search,
+                page: "0",
+                limit: parseInt(event.target.value, 10).toString(),
+              });
               setLimit(parseInt(event.target.value, 10));
               setPage(0);
             }}
