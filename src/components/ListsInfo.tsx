@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Typography,
@@ -30,6 +30,8 @@ export const ReviewsList = () => {
   const [total, setTotal] = useState(limit);
   const [reviews, setReviews] = useState<ReviewControllerFindManyDocs[]>([]);
 
+  const userReviewsTitleRef = useRef<HTMLElement | null>(null);
+
   const pageCount = Math.ceil(total / limit);
 
   useEffect(() => {
@@ -53,6 +55,7 @@ export const ReviewsList = () => {
       <Typography
         variant="h6"
         gutterBottom
+        ref={userReviewsTitleRef}
       >
         Рецензии зрителей
       </Typography>
@@ -92,6 +95,9 @@ export const ReviewsList = () => {
               count={pageCount}
               page={page}
               onChange={(e, newPage: number) => {
+                userReviewsTitleRef?.current?.scrollIntoView({
+                  behavior: "smooth",
+                });
                 setPage(newPage);
               }}
               size="large"
