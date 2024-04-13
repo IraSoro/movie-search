@@ -33,7 +33,7 @@ const MovieDetails: React.FC<DetailsProps> = ({ movie }) => {
         component="h2"
         sx={{ marginTop: "20px", marginBottom: "10px" }}
       >
-        {movie.name}
+        {movie.name || movie.alternativeName}
       </Typography>
       <Grid
         container
@@ -102,6 +102,7 @@ export default function Movie() {
   const { id } = useParams<string>();
   const [movieInfo, setMovieInfo] = useState<MovieControllerFindOneResponse>({
     name: "",
+    alternativeName: "",
     type: "",
     description: "",
     poster: { url: "" },

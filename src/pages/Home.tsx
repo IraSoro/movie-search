@@ -56,7 +56,7 @@ const Item: React.FC<PropsItem> = ({ movie }) => {
               />
             </Box>
           </Link>
-          <Typography>{movie.name}</Typography>
+          <Typography>{movie.name || movie.alternativeName}</Typography>
         </Stack>
       </Box>
     </>

@@ -11,6 +11,7 @@ interface MovieControllerFindManyByQueryOptions {
 export interface MovieControllerFindManyByQueryDoc {
   id: number;
   name: string;
+  alternativeName: string;
   poster: {
     url: string;
     previewUrl: string;
@@ -83,6 +84,7 @@ interface MovieControllerSearchMovieOptions {
 interface MovieControllerSearchMovieDoc {
   id: number;
   name: string;
+  alternativeName: string;
   poster: {
     url: string;
     previewUrl: string;
@@ -131,6 +133,7 @@ interface SimilarMovie {
 
 export interface MovieControllerFindOneResponse {
   name: string;
+  alternativeName: string;
   type: string;
   description: string;
   poster: { url: string };
