@@ -25,6 +25,78 @@ import {
 } from "../data/kinopoisk_api";
 import { debounce } from "../data/utils";
 
+interface SearchProps {
+  filtered: boolean;
+  query?: string;
+  year?: string;
+  country?: string;
+  ageRating?: string;
+  onQueryChange: (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+  onSetYear: (newYear: string) => void;
+  onSetCountry: (newCountry: string) => void;
+  onSetAgeRating: (newAgeRating: string) => void;
+}
+
+export const Search = (props: SearchProps) => {
+  return props.filtered ? (
+    <Grid
+      container
+      alignItems="start"
+      sx={{ maxWidth: "280px" }}
+    >
+      <Grid
+        item
+        xs={12}
+        md={4}
+      >
+        <YearFilter
+          filter={props.year || ""}
+          setFilter={props.onSetYear}
+        />
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        md={4}
+      >
+        <CountryFilter
+          filter={props.country || ""}
+          setFilter={props.onSetCountry}
+        />
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        md={4}
+      >
+        <AgeRatingFilter
+          filter={props.ageRating || ""}
+          setFilter={props.onSetAgeRating}
+        />
+      </Grid>
+    </Grid>
+  ) : (
+    <TextField
+      sx={{ marginBottom: "15px", marginTop: "15px" }}
+      label="Поиск фильмов и сериалов"
+      variant="outlined"
+      defaultValue={props.query || ""}
+      onChange={props.onQueryChange}
+      InputProps={{
+        endAdornment: (
+          <InputAdornment position="end">
+            <IconButton>
+              <SearchIcon />
+            </IconButton>
+          </InputAdornment>
+        ),
+      }}
+    />
+  );
+};
+
 interface PropsItem {
   movie: MovieControllerFindManyByQueryDoc;
 }
@@ -165,100 +237,54 @@ export default function Home() {
         >
           {filtersSearch ? "Поиск по названию" : "Поиск по фильтрам"}
         </Button>
-        {filtersSearch && (
-          <Grid
-            container
-            alignItems="start"
-            sx={{ maxWidth: "280px" }}
-          >
-            <Grid
-              item
-              xs={12}
-              md={4}
-            >
-              <YearFilter
-                filter={year}
-                setFilter={(newYear: string) => {
-                  setYear(newYear);
-                  setSearchParams({
-                    page: page.toString(),
-                    limit: defaultLimit.toString(),
-                    year: newYear,
-                    country: country,
-                    ageRating: ageRating,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={4}
-            >
-              <CountryFilter
-                filter={country}
-                setFilter={(newCountry: string) => {
-                  setCountry(newCountry);
-                  setSearchParams({
-                    page: page.toString(),
-                    limit: defaultLimit.toString(),
-                    year: year,
-                    country: newCountry,
-                    ageRating: ageRating,
-                  });
-                }}
-              />
-            </Grid>
-            <Grid
-              item
-              xs={12}
-              md={4}
-            >
-              <AgeRatingFilter
-                filter={ageRating}
-                setFilter={(newAgeRating: string) => {
-                  setAgeRating(newAgeRating);
-                  setSearchParams({
-                    page: page.toString(),
-                    limit: defaultLimit.toString(),
-                    year: year,
-                    country: country,
-                    ageRating: newAgeRating,
-                  });
-                }}
-              />
-            </Grid>
-          </Grid>
-        )}
-        {!filtersSearch && (
-          <TextField
-            sx={{ marginBottom: "15px", marginTop: "15px" }}
-            id="outlined-basic"
-            label="Поиск фильмов и сериалов"
-            variant="outlined"
-            defaultValue={search || ""}
-            onChange={(event) => {
-              debounce(() => {
-                setSearchParams({
-                  query: event.target.value,
-                  page: "0",
-                  limit: defaultLimit.toString(),
-                });
-                setSearch(event.target.value);
-              }, 1 * 1000);
-              setPage(0);
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton>
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          ></TextField>
-        )}
+        <Search
+          filtered={filtersSearch}
+          query={search}
+          year={year}
+          country={country}
+          ageRating={ageRating}
+          onQueryChange={(event) => {
+            debounce(() => {
+              setSearchParams({
+                query: event.target.value,
+                page: "0",
+                limit: defaultLimit.toString(),
+              });
+              setSearch(event.target.value);
+            }, 1 * 1000);
+            setPage(0);
+          }}
+          onSetYear={(newYear) => {
+            setYear(newYear);
+            setSearchParams({
+              page: page.toString(),
+              limit: defaultLimit.toString(),
+              year: newYear,
+              country: country,
+              ageRating: ageRating,
+            });
+          }}
+          onSetCountry={(newCountry) => {
+            setCountry(newCountry);
+            setSearchParams({
+              page: page.toString(),
+              limit: defaultLimit.toString(),
+              year: year,
+              country: newCountry,
+              ageRating: ageRating,
+            });
+          }}
+          onSetAgeRating={(newAgeRating) => {
+            setAgeRating(newAgeRating);
+            setSearchParams({
+              page: page.toString(),
+              limit: defaultLimit.toString(),
+              year: year,
+              country: country,
+              ageRating: newAgeRating,
+            });
+          }}
+        />
         <Box
           sx={{
             flexGrow: 1,
