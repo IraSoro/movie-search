@@ -44,8 +44,9 @@ async function movieControllerFindManyByQueryV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get list of movies with filters. Server status: '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as MovieControllerFindManyByQueryResponse;
@@ -69,8 +70,9 @@ async function movieControllerGetPossibleValuesByFieldName() {
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get list of countries. Server status '${resp.status}'`,
+    );
   }
   return (await resp.json()) as MovieControllerPossibleValuesByFieldNameResponse[];
 }
@@ -111,8 +113,9 @@ async function movieControllerSearchMovieV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get list of movies by title. Server status: '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as MovieControllerSearchMovieResponse;
@@ -136,7 +139,7 @@ export interface MovieControllerFindOneResponse {
   alternativeName: string;
   type: string;
   description: string;
-  poster: { url: string, previewUrl: string };
+  poster: { url: string; previewUrl: string };
   similarMovies: SimilarMovie[];
   rating: {
     kp: number;
@@ -158,8 +161,9 @@ async function movieControllerFindOneV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get information about the movie by ${options.id} index. Server status: '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as MovieControllerFindOneResponse;
@@ -196,8 +200,9 @@ async function imageControllerFindManyV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get images of movies with ${options.id} index. Server status: '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as ImageControllerFindManyResponse;
@@ -233,8 +238,9 @@ async function personControllerFindManyV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get actors of movie with ${options.moviesId} index. Server status: '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as PersonControllerFindManyResponse;
@@ -271,8 +277,9 @@ async function seasonControllerFindManyV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get seasons of movie with ${options.moviesId} index. Server status: '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as SeasonControllerFindManyResponse;
@@ -309,8 +316,9 @@ async function reviewControllerFindManyV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get reviews for movie with ${options.moviesId} index. Server status:s '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as ReviewControllerFindManyResponse;
@@ -350,8 +358,9 @@ async function movieControllerFindManyByQuerySimilarMoviesV14(
   );
 
   if (resp.status !== 200) {
-    // TODO: Make custom error type
-    throw new Error(`Server returned incorrect status '${resp.status}'`);
+    throw new Error(
+      `Couldn't get similar movies of movie with ${options.id} index. Server status:s '${resp.status}'`,
+    );
   }
 
   return (await resp.json()) as MovieControllerFindManyByQuerySimilarMoviesResponse;
