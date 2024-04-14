@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import {
   Box,
@@ -39,7 +39,7 @@ interface SearchProps {
   onSetAgeRating: (newAgeRating: string) => void;
 }
 
-export const Search = (props: SearchProps) => {
+const Search = memo(function Search(props: SearchProps) {
   return props.filtered ? (
     <Grid
       container
@@ -95,7 +95,7 @@ export const Search = (props: SearchProps) => {
       }}
     />
   );
-};
+});
 
 interface PropsItem {
   movie: MovieControllerFindManyByQueryDoc;
@@ -196,11 +196,11 @@ export default function Home() {
     }
   }, [page, limit, year, country, ageRating, search, filtersSearch]);
 
-  function clearFilters() {
+  const clearFilters = useCallback(() => {
     setYear("");
     setCountry("");
     setAgeRating("");
-  }
+  }, []);
 
   return (
     <div
@@ -303,7 +303,7 @@ export default function Home() {
                 container
                 spacing={{ xs: 1, md: 2 }}
               >
-                {Array.from(array).map((movie, idx) => (
+                {array.map((movie, idx) => (
                   <Grid
                     item
                     xs={6}
