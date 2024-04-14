@@ -208,7 +208,8 @@ export const SeasonsList = () => {
 export const ActorsList = () => {
   const { id } = useParams<string>();
   const [total, setTotal] = useState(10);
-  const [limit, setLimit] = useState(10);
+  const defaultLimit = 10;
+  const [limit, setLimit] = useState(defaultLimit);
   const [actors, setActors] = useState<PersonControllerFindManyDocs[]>([]);
   const [showAll, setShowAll] = useState(true);
 
@@ -242,28 +243,30 @@ export const ActorsList = () => {
         </Typography>
       )}
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button
-          sx={{
-            borderRadius: "20px",
-            boxShadow: "none",
-            color: "#000000",
-            marginTop: "5px",
-          }}
-          color="inherit"
-          variant="contained"
-          size="small"
-          endIcon={showAll ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
-          onClick={() => {
-            setShowAll(!showAll);
-            if (showAll) {
-              setLimit(total);
-            } else {
-              setLimit(10);
-            }
-          }}
-        >
-          {showAll ? "Показать все" : "Свернуть"}
-        </Button>
+        {total > defaultLimit && (
+          <Button
+            sx={{
+              borderRadius: "20px",
+              boxShadow: "none",
+              color: "#000000",
+              marginTop: "5px",
+            }}
+            color="inherit"
+            variant="contained"
+            size="small"
+            endIcon={showAll ? <ArrowDropDownIcon /> : <ArrowDropUpIcon />}
+            onClick={() => {
+              setShowAll(!showAll);
+              if (showAll) {
+                setLimit(total);
+              } else {
+                setLimit(10);
+              }
+            }}
+          >
+            {showAll ? "Показать все" : "Свернуть"}
+          </Button>
+        )}
       </div>
     </>
   );
