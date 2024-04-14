@@ -136,6 +136,7 @@ const Item: React.FC<PropsItem> = ({ movie }) => {
 };
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [total, setTotal] = useState(0);
@@ -172,6 +173,7 @@ export default function Home() {
         .then((resp) => {
           setArray(resp.docs);
           setTotal(resp.total);
+          setIsLoading(false);
         })
         .catch((err) => {
           console.error(err);
@@ -186,6 +188,7 @@ export default function Home() {
         .then((resp) => {
           setArray(resp.docs);
           setTotal(resp.total);
+          setIsLoading(false);
         })
         .catch((err) => {
           console.error(err);
@@ -351,7 +354,9 @@ export default function Home() {
               />
             </>
           ) : (
-            <Typography variant="h5">Ничего не найдено🤔</Typography>
+            !isLoading && (
+              <Typography variant="h5">Ничего не найдено🤔</Typography>
+            )
           )}
         </Box>
       </Stack>
