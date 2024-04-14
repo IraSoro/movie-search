@@ -317,7 +317,10 @@ export default function Home() {
                 component="div"
                 count={total}
                 page={page}
-                onPageChange={(event, newPage: number) => {
+                onPageChange={(_event, newPage: number) => {
+                  document.body.scrollIntoView({
+                    behavior: "smooth",
+                  });
                   setSearchParams({
                     query: search,
                     page: newPage.toString(),
@@ -327,9 +330,6 @@ export default function Home() {
                     ageRating: ageRating,
                   });
                   setPage(newPage);
-                  globalThis.scrollTo({
-                    top: 0,
-                  });
                 }}
                 rowsPerPage={limit}
                 onRowsPerPageChange={(event) => {
