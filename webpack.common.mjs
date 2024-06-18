@@ -11,7 +11,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default {
   entry: "./src/index.ts",
   output: {
-    path: path.join(__dirname, "build"),
+    path: path.join(__dirname, "public"),
     filename: "[name].bundle.js",
     hashFunction: "xxhash64",
   },
@@ -26,7 +26,7 @@ export default {
       useEslintrc: true,
     }),
     new HtmlWebpackPlugin({
-      title: "Avito Test",
+      title: "Search movies",
       favicon: "./static/favicon.ico",
       inject: true,
     }),
@@ -93,7 +93,7 @@ export default {
   },
   devServer: {
     static: {
-      directory: path.join(__dirname, "build"),
+      directory: path.join(__dirname, "public"),
     },
     devMiddleware: {
       writeToDisk: true,
