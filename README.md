@@ -1,31 +1,46 @@
-# Приложение для поиска фильмов
+# Movie search
 
-Приложения для поиска информации по фильмам и сериалам с платформы «Кинопоиск»
+This application allows users to view a list of films and TV series, as well as information about a specific film or TV series, using the KinoPoisk API.
 
-## Инструкция по запуску
+## Setup instructions
 
 ```shell
 npm install
-TOKEN=<Токен_для_доступа_к_API> npm start
+TOKEN=<Token_for_access_to_API> npm start
 ```
 
-## Проблемы
+You can get a token [here](https://kinopoisk.dev/).
 
-В предложенном API есть OpenAPI схема, которую можно загрузить через npm-пакет `api`, однако при загрузке возникает ошибка динамической загрузки внутри этого пакета
+API documentation [here](https://kinopoiskdev.readme.io/reference/%D1%84%D0%B8%D0%BB%D1%8C%D0%BC%D1%8B-%D1%81%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D1%8B-%D0%B8-%D1%82%D0%B4).
 
-Было решено сделать обращение к API через fetch
+## Technology stack
 
-В предложенном API нет возможности сделать запрос одновременно по строке и по фильтрам, у каждого из них свой route, своя пагинация
+- Frontend Framework: React (version 18)
+- Component Library: Material-UI (MUI)
+- Bundler: Webpack
+- Node.js: 18 or higher
+- Package Manager: npm
+- Routing: React Router v6
+- Programming Language: TypeScript
 
-Вариантов решения было 2:
+## Functional Features
 
-- Разделить типы поиска на 2 (по фильтрам и по строке) и обращаться к разным API
-- Собирать результат и создавать общую пагинацию на стороне клиента
+### Movie List Page
 
-Для реализации второго варианта были сделаны следующие попытки:
+- Display a list of movies and TV shows.
+- Pagination.
+- Option to select the number of movies to display per page (default is 10).
+- Filtering results (by year, country, and age rating).
+- Search by movie title.
+- Navigate to the movie details page from the list.
 
-- Обращение к API поиска по строке c максимальным значением limit, с постраничной сборкой всех результатов, сбор из этих результатов всех id в один массив, отправка этого массива как параметра в запрос к API поиска по фильтрам. Однако этот процесс занимал очень много времени, вплоть до минуты, и на стороне клиента хранится очень большой массив данных. Обращаться к API нужно часто, кэшировать не получится, т.к. строка запроса часто меняется.
-- Получение максимального limit, но только первой страницы при обращении к API поиска по строке, дальше фильтрация этого результата по id через API поиска по фильтру и отображение этих результатов. В этом случае пользователь видит лишь малую часть результатов запроса.
-- Убрать отображение страниц и сделать кнопку "Показать больше". По нажатию на эту кнопку обращаться к API поиска по строке, дальше фильтровать по id через API поиска по фильтру и так до того момента, пока мы не получим заданный limit. Однако по ТЗ должна быть пагинация и этот вариант все еще требует хранить результаты прошлых страниц на стороне клиента
+### Movie Details Page
 
-Поэтому был выбран вариант разделить типы поиска
+- Display information about the movie or TV show: title, description, rating, list of actors, list of seasons, user reviews, posters (in a carousel).
+- Display a list of similar movies (in a carousel).
+- "Back" button to return to the list with saved filters and page number.
+
+### Additional Features
+
+- Ability to share search results via a link.
+- Debounced search with a 1-second delay after the last character is typed.
